@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Portal - Tuyển dụng ABC</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Header Styles */
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 150px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            color: inherit;
+            text-decoration: inherit;
+        }
+
+        .logo .highlight {
+            color: #006F18;
+            text-decoration: inherit;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .buttons .btn {
+            font-size: 16px;
+            padding: 10px 20px;
+            border: 2px solid #006F18;
+            background-color: white;
+            color: #006F18;
+            cursor: pointer;
+            border-radius: 5px;
+            white-space: nowrap;
+            text-decoration: none;
+        }
+
+        .buttons .btn.logout {
+            background-color: #006F18;
+            color: white;
+        }
+
+        .main-content {
+            display: flex;
+            margin-top: 10px;
+            padding: 20px;
+            width: 80%;
+        }
+
+        .sidebar {
+            width: 200px; /* Độ rộng của sidebar */
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-right: 20px;
+        }
+
+        .sidebar .menu {
+            padding: 10px 0;
+        }
+
+        .sidebar .menu h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #303030;
+            text-align: center;
+        }
+
+        .sidebar .menu ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar .menu ul li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar .menu ul li a {
+            text-decoration: none;
+            color: #006F18;
+            font-size: 16px;
+            display: block;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar .menu ul li a:hover {
+            background-color: #f0f0f0;
+        }
+
+        .sidebar .menu ul li a.active {
+            background-color: #006F18;
+            color: white;
+        }
+
+        .sidebar .sub-menu {
+            padding-left: 20px;
+            display: none;
+        }
+
+        .content {
+            flex: 1;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .content .create-job {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .content .create-job .job-title {
+            display: flex;
+            align-items: center;
+        }
+
+        .content .create-job .job-title p {
+            font-size: 18px;
+            color: #303030;
+            font-weight: bold;
+            margin-right: 20px;
+        }
+
+        .content .create-job button {
+            font-size: 16px;
+            padding: 10px 20px;
+            border: 2px solid #006F18;
+            background-color: #006F18;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .content .create-job button:hover {
+            background-color: #005F14;
+        }
+
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .content table th,
+        .content table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .content table th {
+            background-color: #f2f2f2;
+            color: #303030;
+            font-weight: bold;
+        }
+
+        .content table td {
+            color: #606060;
+        }
+
+        .content table tbody tr:hover {
+            background-color: #f0f0f0;
+        }
+
+        footer {
+            width: 100%;
+            background-color: #006F18;
+            padding: 20px 0;
+            text-align: center;
+            color: white;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <a class="logo" th:href="@{/}">Tuyển dụng <span class="highlight">ABC</span></a>
+    <div class="buttons">
+        <a th:href="@{/logout}">
+            <button class="btn logout">Đăng xuất</button>
+        </a>
+    </div>
+</header>
+<main class="main-content">
+    <div class="sidebar">
+        <div class="menu">
+            <ul>
+                <li><a href="#" onclick="toggleSubMenu(event)">Tin tuyển dụng</a>
+                    <div class="sub-menu" id="sub-menu">
+                        <ul>
+                            <li><a href="#">Đã đăng tuyển</a></li>
+                            <li><a href="#">Chờ thanh toán</a></li>
+                            <li><a href="#">Chờ xét duyệt</a></li>
+                            <li><a href="#">Bị từ chối</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li><a href="#">Hồ sơ ứng viên</a></li>
+                <li><a href="#">Thông báo</a></li>
+                <li><a href="#">Tài khoản</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="content">
+        <div class="create-job">
+            <div class="job-title">
+                <p>Quản lý tin tuyển dụng</p>
+            </div>
+            <button>Tạo tin tuyển dụng</button>
+        </div>
+        <table>
+            <thead>
+            <tr>
+                <th>Vị trí tuyển dụng</th>
+                <th>Lượt nộp hồ sơ</th>
+                <th>Ngày đăng tin</th>
+                <th>Hạn nộp hồ sơ</th>
+                <th>Trạng thái</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Vị trí 1</td>
+                <td>100</td>
+                <td>01/07/2024</td>
+                <td>15/07/2024</td>
+                <td>Đang mở</td>
+            </tr>
+            <tr>
+                <td>Vị trí 2</td>
+                <td>50</td>
+                <td>03/07/2024</td>
+                <td>18/07/2024</td>
+                <td>Đang mở</td>
+            </tr>
+            <tr>
+                <td>Vị trí 3</td>
+                <td>80</td>
+                <td>05/07/2024</td>
+                <td>20/07/2024</td>
+                <td>Đóng</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+<footer>
+    <p>© 2024 Tuyển dụng ABC. All rights reserved.</p>
+</footer>
+
+<script>
+    function toggleSubMenu(event) {
+        event.preventDefault();
+        const subMenu = document.getElementById('sub-menu');
+        if (subMenu.style.display === 'block') {
+            subMenu.style.display = 'none';
+        } else {
+            subMenu.style.display = 'block';
+        }
+    }
+
+    // add events for sidebar
+    const menuItems = document.querySelectorAll('.sidebar .menu ul li a');
+    menuItems.forEach(item => {
+        item.addEventListener('click', function() {
+            // Remove the previously active class of all links
+            menuItems.forEach(link => link.classList.remove('active'));
+            // To add the active class to the clicked link
+            this.classList.add('active');
+        });
+    });
+</script>
+</body>
+</html>

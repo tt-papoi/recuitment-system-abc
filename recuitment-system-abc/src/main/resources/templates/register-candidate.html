@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký ứng viên - Tuyển dụng ABC</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #f9f9f9;
+        }
+
+        /* Header Styles */
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 150px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            color: inherit;
+            text-decoration: inherit;
+        }
+
+        .logo .highlight {
+            color: #006F18;
+            text-decoration: inherit;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .buttons .btn {
+            font-size: 16px;
+            padding: 10px 20px;
+            border: 2px solid #006F18;
+            background-color: white;
+            color: #006F18;
+            cursor: pointer;
+            border-radius: 5px;
+            white-space: nowrap;
+            text-decoration: none;
+        }
+
+        .buttons .btn.login {
+            background-color: #006F18;
+            color: white;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 100px;
+            padding: 20px;
+            width: 100%;
+            flex: 1;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+
+        .form-container h2 {
+            margin-bottom: 20px;
+            color: #303030;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #606060;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #006F18;
+        }
+
+        .form-group button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #006F18;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-group button:hover {
+            background-color: #005F14;
+        }
+
+        footer {
+            width: 100%;
+            background-color: #006F18;
+            padding: 20px 0;
+            text-align: center;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <a class="logo" th:href="@{/}">Tuyển dụng <span class="highlight">ABC</span></a>
+    <div class="buttons">
+        <a th:href="@{/login}">
+            <button class="btn login">Đăng nhập</button>
+        </a>
+    </div>
+</header>
+<main class="main-content">
+    <div class="form-container">
+        <h2>Đăng ký ứng viên</h2>
+        <form th:action="@{/register-member/candidate}" method="post">
+            <div class="form-group">
+                <label for="name">Tên</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="dob">Ngày sinh</label>
+                <input type="date" id="dob" name="dob" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Số điện thoại</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <button type="submit">Đăng ký</button>
+            </div>
+        </form>
+    </div>
+</main>
+<footer>
+    <p>© 2024 Tuyển dụng ABC. All rights reserved.</p>
+</footer>
+</body>
+</html>

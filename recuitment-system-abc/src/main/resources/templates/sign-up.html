@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký</title>
+    <link rel="stylesheet" th:href="@{/stylesheets/global-stylesheet.css}">
+</head>
+<body>
+    <header>
+        <a class="logo" th:href="@{/index}">Tuyển dụng <span class="highlight">ABC</span></a>
+        <div class="buttons">
+            <a th:href="@{/login}">
+                <button class="btn login">Đăng nhập</button>
+            </a>
+            <a th:href="@{/sign-up}">
+                <button class="btn register">Đăng ký</button>
+            </a>
+        </div>
+    </header>
+    <div class="container">
+        <h2>Đăng ký</h2>
+        <form method="post" th:action="@{/sign-up/create-account}" th:object="${user}">
+            <q style="color:red" th:errors="*{username}"></q>
+            <input type="text" placeholder="Tên đăng nhập" th:field="*{username}">
+            <q style="color:red" th:errors="*{password}"></q>
+            <input type="password" placeholder="Mật khẩu" th:field="*{password}">
+            <q style="color:red" th:errors="*{confirmPassword}"></q>
+            <input type="password" placeholder="Nhập lại mật khẩu" th:field="*{confirmPassword}">
+            <button type="submit">Đăng ký</button>
+            <p>Đã có tài khoản? <a th:href="@{/login}">Đăng nhập</a></p>
+        </form>
+    </div>
+</body>
+</html>
