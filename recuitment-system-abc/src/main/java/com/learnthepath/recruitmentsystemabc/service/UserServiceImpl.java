@@ -5,9 +5,14 @@ import com.learnthepath.recruitmentsystemabc.entity.RoleEntity;
 import com.learnthepath.recruitmentsystemabc.entity.UserEntity;
 import com.learnthepath.recruitmentsystemabc.repository.RoleRepository;
 import com.learnthepath.recruitmentsystemabc.repository.UserRepository;
+import com.learnthepath.recruitmentsystemabc.security.CustomUserDetails;
+import com.learnthepath.recruitmentsystemabc.security.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +29,8 @@ public class UserServiceImpl implements UserService {
     private RoleRepository roleRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
 
     @Override
     public void saveUser(UserDto userDto) {
@@ -38,13 +45,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserEntity findUserByUsername(String username) {
+    public UserEntity findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
     @Override
     public boolean checkUserExist(String username) {
-        return findUserByUsername(username) != null;
+        return findByUsername(username) != null;
     }
 
     @Override
@@ -81,5 +88,20 @@ public class UserServiceImpl implements UserService {
         } else {
             return "/";
         }
+    }
+
+    @Override
+    public void updateRole(Integer userId, Set<RoleEntity> newRoles) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+
+        // Update roles
+        user.setRoles(newRoles);
+
+        // Save the updated user entity
+        userRepository.save(user);
+
+        // Reload user details and update security context
+        customUserDetailsService.reloadUserDetails(user.getUsername());
     }
 }
