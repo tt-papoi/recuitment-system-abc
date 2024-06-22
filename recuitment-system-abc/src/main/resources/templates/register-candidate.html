@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng ký ứng viên - Tuyển dụng ABC</title>
+    <title>Chọn vai trò & Đăng ký ứng viên - Tuyển dụng ABC</title>
     <style>
         /* Global Styles */
         * {
@@ -16,8 +16,10 @@
             font-family: Arial, sans-serif;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
             background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
         }
 
         /* Header Styles */
@@ -64,21 +66,54 @@
             text-decoration: none;
         }
 
-        .buttons .btn.login {
+        .buttons .btn.logout {
             background-color: #006F18;
             color: white;
         }
 
-        /* Main Content Styles */
         .main-content {
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            flex-direction: row;
+            align-items: flex-start;
             justify-content: center;
             margin-top: 100px;
             padding: 20px;
             width: 100%;
-            flex: 1;
+            height: calc(100vh - 100px);
+            box-sizing: border-box;
+        }
+
+        .choice-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 10px;
+            margin-right: 50px;
+        }
+
+        .choice-container .choice {
+            text-align: center;
+            padding: 20px;
+            border: 2px solid #006F18;
+            background-color: #fff;
+            color: #006F18;
+            cursor: pointer;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+            width: 200px;
+        }
+
+        .choice-container .choice:hover {
+            background-color: #006F18;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .choice-container img {
+            width: 80%;
+            height: auto;
+            margin-bottom: 10px;
         }
 
         .form-container {
@@ -139,6 +174,7 @@
             padding: 20px 0;
             text-align: center;
             color: white;
+            margin-top: auto;
         }
     </style>
 </head>
@@ -146,12 +182,22 @@
 <header>
     <a class="logo" th:href="@{/}">Tuyển dụng <span class="highlight">ABC</span></a>
     <div class="buttons">
-        <a th:href="@{/login}">
-            <button class="btn login">Đăng nhập</button>
+        <a th:href="@{/logout}">
+            <button class="btn logout">Đăng xuất</button>
         </a>
     </div>
 </header>
 <main class="main-content">
+    <div class="choice-container">
+        <a th:href="@{/register-member/enterprise}" class="choice">
+            <img th:src="@{/images/enterprise_icon.png}" alt="Nhà tuyển dụng">
+            <div>Tôi là nhà tuyển dụng</div>
+        </a>
+        <a th:href="@{/register-member/candidate}" class="choice">
+            <img th:src="@{/images/candidate_icon.png}" alt="Ứng viên">
+            <div>Tôi là ứng viên</div>
+        </a>
+    </div>
     <div class="form-container">
         <h2>Đăng ký ứng viên</h2>
         <form th:action="@{/register-member/candidate}" method="post">

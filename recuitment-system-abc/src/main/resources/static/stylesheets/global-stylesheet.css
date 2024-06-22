@@ -6,14 +6,12 @@
 }
 
 body {
+    align-items: center;
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
     background-color: #f9f9f9;
+    height: 100vh;
 }
 
 /* Header Styles */
@@ -136,4 +134,13 @@ button:hover {
 /* Link Styles */
 a {
     color: #006F18;
+}
+
+footer {
+    width: 100%;
+    background-color: #006F18;
+    padding: 20px 0;
+    text-align: center;
+    color: white;
+    margin-top: auto;
 }
