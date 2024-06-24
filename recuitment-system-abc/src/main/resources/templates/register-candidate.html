@@ -200,22 +200,22 @@
     </div>
     <div class="form-container">
         <h2>Đăng ký ứng viên</h2>
-        <form th:action="@{/register-member/candidate}" method="post">
+        <form th:action="@{/register-member/candidate/submit}" method="post" th:object="${candidate}">
             <div class="form-group">
                 <label for="name">Tên</label>
-                <input type="text" id="name" name="name" required>
+                <input type="text" id="name" name="name" th:field="*{name}" required>
             </div>
             <div class="form-group">
                 <label for="dob">Ngày sinh</label>
-                <input type="date" id="dob" name="dob" required>
+                <input type="date" id="dob" name="dob" th:field="*{birthday}" required>
             </div>
             <div class="form-group">
                 <label for="phone">Số điện thoại</label>
-                <input type="tel" id="phone" name="phone" required>
+                <input type="tel" id="phone" name="phone" th:field="*{phoneNumber}" required>
             </div>
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
+                <input type="email" id="email" name="email" th:field="*{email}" required>
             </div>
             <div class="form-group">
                 <button type="submit">Đăng ký</button>

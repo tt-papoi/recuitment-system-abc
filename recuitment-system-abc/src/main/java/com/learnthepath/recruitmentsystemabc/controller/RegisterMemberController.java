@@ -1,5 +1,6 @@
 package com.learnthepath.recruitmentsystemabc.controller;
 
+import com.learnthepath.recruitmentsystemabc.dto.CandidateDto;
 import com.learnthepath.recruitmentsystemabc.dto.EnterpriseDto;
 import com.learnthepath.recruitmentsystemabc.service.CandidateService;
 import com.learnthepath.recruitmentsystemabc.service.EnterpriseService;
@@ -51,7 +52,21 @@ public class RegisterMemberController {
     }
 
     @GetMapping("/register-member/candidate")
-    public String showCandidateRegistrationPage() {
+    public String showCandidateRegistrationPage(Model model) {
+        model.addAttribute("candidate", new CandidateDto());
         return "register-candidate";
+    }
+
+    @PostMapping("/register-member/candidate/submit")
+    public String handleEnterpriseRegistration(@Valid CandidateDto candidateDto, BindingResult result) {
+        if(result.hasErrors()) {
+            return "register-candidate";
+        }
+        candidateService.saveCandidate(candidateDto);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken)) {
+            return "redirect:" + userService.determineRedirectUrl(auth);
+        }
+        return "redirect:/";
     }
 }

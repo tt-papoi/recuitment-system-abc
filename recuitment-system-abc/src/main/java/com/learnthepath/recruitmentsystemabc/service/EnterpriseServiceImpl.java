@@ -8,9 +8,7 @@ import com.learnthepath.recruitmentsystemabc.repository.EnterpriseRepository;
 import com.learnthepath.recruitmentsystemabc.repository.RoleRepository;
 import com.learnthepath.recruitmentsystemabc.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,11 +54,11 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         Set<RoleEntity> newRole = new HashSet<>(Collections.singleton(roleEntity));
         userService.updateRole(userEntity.getId(), newRole);
 
-        // reload auth
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        List<GrantedAuthority> updatedAuthorities = new ArrayList<>(auth.getAuthorities());
-        Authentication newAuth = new UsernamePasswordAuthenticationToken(auth.getPrincipal(), auth.getCredentials(), updatedAuthorities);
-        SecurityContextHolder.getContext().setAuthentication(newAuth);
+//        // reload auth
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        List<GrantedAuthority> updatedAuthorities = new ArrayList<>(auth.getAuthorities());
+//        Authentication newAuth = new UsernamePasswordAuthenticationToken(auth.getPrincipal(), auth.getCredentials(), updatedAuthorities);
+//        SecurityContextHolder.getContext().setAuthentication(newAuth);
     }
 
     @Override

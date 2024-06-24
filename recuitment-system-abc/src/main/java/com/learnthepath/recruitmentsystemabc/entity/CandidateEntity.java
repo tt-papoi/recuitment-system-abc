@@ -28,7 +28,7 @@ public class CandidateEntity {
     private String email;
 
     @Column(name = "birthday", nullable = false)
-    Date dob;
+    Date birthday;
 
     @OneToOne
     @MapsId
