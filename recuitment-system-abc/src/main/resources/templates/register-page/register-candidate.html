@@ -176,6 +176,51 @@
             color: white;
             margin-top: auto;
         }
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            header {
+                padding: 20px 20px; /* Reduce padding for smaller screens */
+            }
+
+            .logo {
+                font-size: 18px; /* Further reduce font size for smaller screens */
+            }
+
+            .buttons .btn {
+                font-size: 12px; /* Further reduce font size for smaller screens */
+                padding: 6px 12px; /* Adjust padding for smaller screens */
+            }
+
+            .main-content {
+                margin-top: 50px; /* Adjust margin top for smaller screens */
+                flex-direction: column;
+            }
+
+            .choice-container {
+                max-width: 100%; /* Full width for choice container on smaller screens */
+                padding: 0 10px; /* Adjust padding for smaller screens */
+            }
+
+            .choice {
+                max-width: 100%; /* Full width for choice items on smaller screens */
+                width: 100%; /* Full width for choice items on smaller screens */
+            }
+
+            .choice img {
+                width: 50%; /* Adjust image size for smaller screens */
+            }
+
+            .form-container {
+                max-width: 100%; /* Full width for form container on smaller screens */
+                width: 100%; /* Full width for form container on smaller screens */
+                padding: 10px; /* Adjust padding for smaller screens */
+            }
+
+            .form-group button {
+                font-size: 14px; /* Adjust font size for smaller screens */
+                padding: 8px; /* Adjust padding for smaller screens */
+            }
+        }
     </style>
 </head>
 <body>

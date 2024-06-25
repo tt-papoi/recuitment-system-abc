@@ -39,12 +39,12 @@ public class EnterpriseServiceImpl implements EnterpriseService {
             throw new RuntimeException("User not found: " + userDetails.getUsername());
         }
 
+        enterpriseDto.setStatus("NON_MEMBER");
         // Map DTO to entity
         EnterpriseEntity enterpriseEntity = mapToEnterpriseEntity(enterpriseDto);
 
         // Set the user entity and synchronize the id
         enterpriseEntity.setUser(userEntity);
-        //enterpriseEntity.setId(userEntity.getId()); // Ensure the id is synchronized
 
         // Save or update enterpriseEntity
         enterpriseRepository.save(enterpriseEntity);
@@ -53,13 +53,9 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         RoleEntity roleEntity = roleRepository.findByName("ENTERPRISE");
         Set<RoleEntity> newRole = new HashSet<>(Collections.singleton(roleEntity));
         userService.updateRole(userEntity.getId(), newRole);
-
-//        // reload auth
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        List<GrantedAuthority> updatedAuthorities = new ArrayList<>(auth.getAuthorities());
-//        Authentication newAuth = new UsernamePasswordAuthenticationToken(auth.getPrincipal(), auth.getCredentials(), updatedAuthorities);
-//        SecurityContextHolder.getContext().setAuthentication(newAuth);
     }
+
+
 
     @Override
     public EnterpriseDto mapToEnterpriseDto(EnterpriseEntity enterpriseEntity) {
@@ -71,6 +67,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         dto.setRepresentative(enterpriseEntity.getRepresentative());
         dto.setPhoneNumber(enterpriseEntity.getPhoneNumber());
         dto.setTaxCode(enterpriseEntity.getTaxCode());
+        dto.setStatus(enterpriseEntity.getStatus());
         return dto;
     }
 
@@ -84,6 +81,13 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         entity.setRepresentative(enterpriseDto.getRepresentative());
         entity.setPhoneNumber(enterpriseDto.getPhoneNumber());
         entity.setTaxCode(enterpriseDto.getTaxCode());
+        entity.setStatus(enterpriseDto.getStatus());
         return entity;
+    }
+
+    @Override
+    public List<EnterpriseEntity> getNonMemberEnterprises() {
+        return enterpriseRepository.findByStatus("NON_MEMBER");
+
     }
 }

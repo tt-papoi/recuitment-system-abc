@@ -29,19 +29,19 @@ public class RegisterMemberController {
 
     @GetMapping("/register-member/home")
     public String showMemberRegistrationPage() {
-        return "register-member";
+        return "register-page/register-member";
     }
 
     @GetMapping("/register-member/enterprise")
     public String showEnterpriseRegistrationPage(Model model) {
         model.addAttribute("enterprise", new EnterpriseDto());
-        return "register-enterprise";
+        return "register-page/register-enterprise";
     }
 
     @PostMapping("/register-member/enterprise/submit")
     public String handleEnterpriseRegistration(@Valid EnterpriseDto enterpriseDto, BindingResult result) {
         if(result.hasErrors()) {
-            return "register-enterprise";
+            return "register-page/register-enterprise";
         }
         enterpriseService.saveEnterprise(enterpriseDto);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -54,13 +54,13 @@ public class RegisterMemberController {
     @GetMapping("/register-member/candidate")
     public String showCandidateRegistrationPage(Model model) {
         model.addAttribute("candidate", new CandidateDto());
-        return "register-candidate";
+        return "register-page/register-candidate";
     }
 
     @PostMapping("/register-member/candidate/submit")
     public String handleEnterpriseRegistration(@Valid CandidateDto candidateDto, BindingResult result) {
         if(result.hasErrors()) {
-            return "register-candidate";
+            return "register-page/register-candidate";
         }
         candidateService.saveCandidate(candidateDto);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

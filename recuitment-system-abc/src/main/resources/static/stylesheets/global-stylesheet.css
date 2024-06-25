@@ -83,9 +83,8 @@ main .btn.apply {
 }
 
 img {
-    max-width: 700px;
-    max-height: 700px;
-    margin-top: 20px;
+   height: auto;
+   width:50%;
 }
 
 /* Container Styles */
@@ -143,4 +142,34 @@ footer {
     text-align: center;
     color: white;
     margin-top: auto;
+}
+@media (max-width: 768px) {
+    /* Responsive adjustments */
+    header {
+        padding: 15px 50px;
+    }
+    .main-content {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+    img {
+       margin-top: 10px;
+       height: auto;
+       width:80%;
+    }
+    main h1 {
+        font-size: 25px;
+        color: #303030;
+    }
+    .sidebar {
+        width: 100%;
+        margin: 0;
+        margin-bottom: 20px;
+    }
+    .content {
+        width: 100%;
+        padding: 10px;
+        overflow-x: auto; /* Scroll horizontally if table overflows */
+    }
 }

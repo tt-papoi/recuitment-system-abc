@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enterprise Portal - Tuyển dụng ABC</title>
+    <title>Admin Portal - Tuyển dụng ABC</title>
     <style>
         /* Global Styles */
         * {
@@ -103,7 +103,8 @@
         }
 
         .sidebar .menu ul li {
-            margin-bottom: 10px;
+            margin-bottom: 5px;
+            margin-top: 5px;
         }
 
         .sidebar .menu ul li a {
@@ -136,6 +137,11 @@
             padding: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
         }
 
         .content .create-job {
@@ -166,6 +172,7 @@
             cursor: pointer;
             border-radius: 5px;
             transition: background-color 0.3s ease;
+            margin-top: 10px;
         }
 
         .content .create-job button:hover {
@@ -197,6 +204,7 @@
 
         .content table tbody tr:hover {
             background-color: #f0f0f0;
+            cursor: pointer;
         }
 
         footer {
@@ -206,6 +214,104 @@
             text-align: center;
             color: white;
             margin-top: auto;
+        }
+
+        .member-alert {
+            background-color: #006F18;
+            color: #333;
+            padding: 15px;
+            border: 1px solid #6ecc82;
+            border-radius: 5px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .member-alert strong {
+            font-size: 18px;
+            color: white;
+        }
+
+        #enterpriseDetails {
+            display: none;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        #enterpriseDetails.active {
+            display: block;
+        }
+
+        #enterpriseDetails h2 {
+            font-size: 20px;
+            color: #303030;
+            margin-bottom: 10px;
+        }
+
+        #enterpriseDetails .detail-item {
+            margin-bottom: 10px;
+        }
+
+        #enterpriseDetails .detail-item strong {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .content .button-group {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .content .button-group .btn {
+            font-size: 16px;
+            padding: 10px 20px;
+            border: 2px solid #006F18;
+            background-color: #006F18;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            margin: 0 10px;
+        }
+
+        .content .button-group .btn:hover {
+            background-color: #005F14;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            /* Responsive adjustments */
+            header {
+                padding: 15px 20px;
+            }
+            .main-content {
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+            }
+            .sidebar {
+                width: 100%;
+                margin: 0;
+                margin-bottom: 20px;
+            }
+            .content {
+                width: 100%;
+                padding: 10px;
+                overflow-x: auto; /* Scroll horizontally if table overflows */
+            }
+            .content table {
+                width: 100%;
+                table-layout: fixed;
+            }
+            .content table th,
+            .content table td {
+                text-overflow: ellipsis; /* Để tránh tràn từ */
+                overflow: hidden; /* ẩn phần bị tràn */
+                white-space: nowrap; /* ngăn chặn xuống dòng trong  */
+            }
         }
     </style>
 </head>
@@ -222,18 +328,14 @@
     <div class="sidebar">
         <div class="menu">
             <ul>
-                <li><a href="#" onclick="toggleSubMenu(event)">Tin tuyển dụng</a>
+                <li><a href="#" onclick="toggleSubMenu(event)">Xét duyệt</a>
                     <div class="sub-menu" id="sub-menu">
                         <ul>
-                            <li><a href="#">Đã đăng tuyển</a></li>
-                            <li><a href="#">Chờ thanh toán</a></li>
-                            <li><a href="#">Chờ xét duyệt</a></li>
-                            <li><a href="#">Bị từ chối</a></li>
+                            <li><a href="#">Tuyển dụng</a></li>
+                            <li><a href="#">Doanh nghiệp</a></li>
                         </ul>
                     </div>
                 </li>
-                <li><a href="#">Hồ sơ ứng viên</a></li>
-                <li><a href="#">Thông báo</a></li>
                 <li><a href="#">Tài khoản</a></li>
             </ul>
         </div>
@@ -241,50 +343,65 @@
     <div class="content">
         <div class="create-job">
             <div class="job-title">
-                <p>Quản lý tin tuyển dụng</p>
+                <p>Xét duyệt doanh nghiệp thành viên</p>
             </div>
-            <button>Tạo tin tuyển dụng</button>
         </div>
-        <table>
+        <table id="enterpriseTable">
             <thead>
             <tr>
-                <th>Vị trí tuyển dụng</th>
-                <th>Lượt nộp hồ sơ</th>
-                <th>Ngày đăng tin</th>
-                <th>Hạn nộp hồ sơ</th>
-                <th>Trạng thái</th>
+                <th>Tên doanh nghiệp</th>
+                <th>Email</th>
+                <th>Số điện thoại</th>
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>Vị trí 1</td>
-                <td>100</td>
-                <td>01/07/2024</td>
-                <td>15/07/2024</td>
-                <td>Đang mở</td>
-            </tr>
-            <tr>
-                <td>Vị trí 2</td>
-                <td>50</td>
-                <td>03/07/2024</td>
-                <td>18/07/2024</td>
-                <td>Đang mở</td>
-            </tr>
-            <tr>
-                <td>Vị trí 3</td>
-                <td>80</td>
-                <td>05/07/2024</td>
-                <td>20/07/2024</td>
-                <td>Đóng</td>
+            <tr th:each="enterprise, index : ${nonMemberEnterprises}" th:attr="data-index=${index.index}">
+                <td th:text="${enterprise.name}"></td>
+                <td th:text="${enterprise.email}"></td>
+                <td th:text="${enterprise.phoneNumber}"></td>
             </tr>
             </tbody>
         </table>
+        <div id="enterpriseDetails">
+            <h2>Thông tin chi tiết</h2>
+            <div class="detail-item">
+                <p><strong>Tên doanh nghiệp:</strong> <span id="enterpriseName"></span></p>
+            </div>
+            <div class="detail-item">
+                <p><strong>Email:</strong> <span id="enterpriseEmail"></span></p>
+            </div>
+            <div class="detail-item">
+                <p><strong>Số điện thoại:</strong> <span id="enterprisePhoneNumber"></span></p>
+            </div>
+            <div class="detail-item">
+                <p><strong>Người đại diện:</strong> <span id="enterpriseRepresentative"></span></p>
+            </div>
+            <div class="detail-item">
+                <p><strong>Mã số thuế:</strong> <span id="enterpriseTaxCode"></span></p>
+            </div>
+            <div class="detail-item">
+                <p><strong>Địa chỉ:</strong> <span id="enterpriseAddress"></span></p>
+            </div>
+            <div class="button-group">
+                <button class="btn" onclick="goBack()">Quay lại</button>
+                <button class="btn">Từ chối</button>
+                <button class="btn">Duyệt</button>
+            </div>
+        </div>
     </div>
+
 </main>
 <footer>
     <p>© 2024 Tuyển dụng ABC. All rights reserved.</p>
 </footer>
-<script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    function goBack() {
+        document.getElementById('enterpriseDetails').classList.remove('active');
+        document.getElementById('enterpriseTable').classList.remove('hidden');
+    }
+
     function toggleSubMenu(event) {
         event.preventDefault();
         const subMenu = document.getElementById('sub-menu');
@@ -305,6 +422,35 @@
             this.classList.add('active');
         });
     });
+
+    // Lấy danh sách các hàng trong bảng
+    const rows = document.querySelectorAll('#enterpriseTable tbody tr');
+
+    // Lặp qua từng hàng và thêm sự kiện click
+    rows.forEach(row => {
+    row.addEventListener('click', () => {
+        // Lấy chỉ số của hàng được click
+        const index = row.getAttribute('data-index');
+
+        // Lấy thông tin doanh nghiệp từ biến Thymeleaf
+        const enterprises = /*[[${nonMemberEnterprises}]]*/[index];
+        const enterprise = enterprises[index];
+        // Cập nhật thông tin chi tiết doanh nghiệp
+        document.getElementById('enterpriseName').textContent = enterprise.name;
+        document.getElementById('enterpriseEmail').textContent = enterprise.email;
+        document.getElementById('enterprisePhoneNumber').textContent = enterprise.phoneNumber;
+        document.getElementById('enterpriseRepresentative').textContent = enterprise.representative;
+        document.getElementById('enterpriseTaxCode').textContent = enterprise.taxCode;
+        document.getElementById('enterpriseAddress').textContent = enterprise.address;
+
+        // Hiển thị thông tin chi tiết doanh nghiệp
+        document.getElementById('enterpriseDetails').classList.add('active');
+
+        // Ẩn bảng doanh nghiệp
+        document.getElementById('enterpriseTable').classList.add('hidden');
+    });
+});
+/*]]>*/
 </script>
 </body>
 </html>

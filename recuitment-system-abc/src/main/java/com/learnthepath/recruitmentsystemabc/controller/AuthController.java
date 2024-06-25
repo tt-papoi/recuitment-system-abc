@@ -42,7 +42,7 @@ public class AuthController {
     @GetMapping("/sign-up")
     public String showSignUpPage(Model model, @RequestParam(required = false) String username) {
         model.addAttribute("user", new UserDto());
-        return "/sign-up";
+        return "sign-up";
     }
 
     // handler method to handle user registration form submit request

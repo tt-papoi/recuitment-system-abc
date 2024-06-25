@@ -1,7 +1,5 @@
 package com.learnthepath.recruitmentsystemabc.dto;
 
-import com.learnthepath.recruitmentsystemabc.entity.UserEntity;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,4 +30,6 @@ public class EnterpriseDto {
 
     @NotEmpty(message = "Email cannot be blank")
     private String email;
+
+    private String status;
 }

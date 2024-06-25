@@ -15,6 +15,6 @@ public class EnterpriseController {
     @GetMapping("/enterprise/home")
     public String showEnterpriseHomePage(Model model) {
         model.addAttribute("enterprise", new EnterpriseDto());
-        return "home_enterprise";
+        return "enterprise-page/enterprise-home";
     }
 }
