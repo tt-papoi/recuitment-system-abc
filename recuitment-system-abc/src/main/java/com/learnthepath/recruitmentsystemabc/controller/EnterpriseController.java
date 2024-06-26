@@ -40,4 +40,10 @@ public class EnterpriseController {
         model.addAttribute("enterprise", enterpriseService.getCurrentEnterprise());
         return "enterprise-page/enterprise-posted-job";
     }
+
+    @GetMapping("/enterprise/recruitment/create")
+    public String showCreateRecruitmentPage(Model model) {
+        model.addAttribute("enterprise", enterpriseService.getCurrentEnterprise());
+        return "enterprise-page/enterprise-create-recruiment";
+    }
 }
