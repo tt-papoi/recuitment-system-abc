@@ -78,7 +78,7 @@
         }
 
         .sidebar {
-            width: 200px; /* Độ rộng của sidebar */
+            width: 200px;
             background-color: #fff;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
@@ -137,12 +137,18 @@
             padding: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start; /* Align items to the left */
+            text-align: center;
         }
 
         .content .create-job {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            width: 100%;
             margin-bottom: 20px;
         }
 
@@ -155,7 +161,7 @@
             font-size: 18px;
             color: #303030;
             font-weight: bold;
-            margin-right: 20px;
+            margin: 0; /* Remove margin to prevent space */
         }
 
         .content .create-job button {
@@ -198,6 +204,7 @@
 
         .content table tbody tr:hover {
             background-color: #f0f0f0;
+            cursor: pointer;
         }
 
         footer {
@@ -223,6 +230,7 @@
             font-size: 18px;
             color: white;
         }
+
         @media (max-width: 768px) {
             /* Responsive adjustments */
             header {
@@ -272,10 +280,10 @@
                 <li><a th:if="*{status} == 'MEMBER'" href="#" onclick="toggleSubMenu(event)">Tin tuyển dụng</a>
                     <div class="sub-menu" id="sub-menu">
                         <ul>
-                            <li><a href="#">Đã đăng tuyển</a></li>
-                            <li><a href="#">Chờ thanh toán</a></li>
-                            <li><a href="#">Chờ xét duyệt</a></li>
-                            <li><a href="#">Bị từ chối</a></li>
+                            <li><a th:href="@{/enterprise/recruitment/posted}" id="postedTab">Đã đăng tuyển</a></li>
+                            <li><a th:href="@{/enterprise/recruitment/pending-paid}" id="pendingPaidTab">Chờ thanh toán</a></li>
+                            <li><a th:href="@{/enterprise/recruitment/pending-approval}" id="pendingApprovalTab">Chờ xét duyệt</a></li>
+                            <li><a th:href="@{/enterprise/recruitment/disapproval}" id="disapprovalTab">Bị từ chối</a></li>
                         </ul>
                     </div>
                 </li>
@@ -290,7 +298,9 @@
             <div class="job-title">
                 <p>Quản lý tin tuyển dụng</p>
             </div>
-            <button>Tạo tin tuyển dụng</button>
+            <div class="job-button">
+                <button>Tạo tin tuyển dụng</button>
+            </div>
         </div>
         <table th:if="*{status} == 'MEMBER'">
             <thead>
@@ -324,14 +334,20 @@
 <footer>
     <p>© 2024 Tuyển dụng ABC. All rights reserved.</p>
 </footer>
-<script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
     function toggleSubMenu(event) {
-        event.preventDefault();
         const subMenu = document.getElementById('sub-menu');
+        const approvalTab = event.target.closest('div');
+
+        // Toggle visibility of sub-menu
         if (subMenu.style.display === 'block') {
             subMenu.style.display = 'none';
+            approvalTab.classList.remove('active'); // Remove active class when hiding sub-menu
         } else {
             subMenu.style.display = 'block';
+            approvalTab.classList.add('active'); // Add active class when showing sub-menu
         }
     }
 
@@ -345,6 +361,13 @@
             this.classList.add('active');
         });
     });
+
+    // Set "Đã đăng tuyển" tab active on page load
+    window.addEventListener('load', () => {
+        document.getElementById('postedTab').classList.add('active');
+        document.getElementById('sub-menu').style.display = 'block'; // Ensure the sub-menu is visible
+    });
+    /*]]>*/
 </script>
 </body>
 </html>

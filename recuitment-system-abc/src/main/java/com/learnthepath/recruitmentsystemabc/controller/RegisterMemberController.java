@@ -40,7 +40,7 @@ public class RegisterMemberController {
 
     @PostMapping("/register-member/enterprise/submit")
     public String handleEnterpriseRegistration(@Valid EnterpriseDto enterpriseDto, BindingResult result) {
-        if(result.hasErrors()) {
+        if (result.hasErrors()) {
             return "register-page/register-enterprise";
         }
         enterpriseService.saveEnterprise(enterpriseDto);
@@ -59,7 +59,7 @@ public class RegisterMemberController {
 
     @PostMapping("/register-member/candidate/submit")
     public String handleEnterpriseRegistration(@Valid CandidateDto candidateDto, BindingResult result) {
-        if(result.hasErrors()) {
+        if (result.hasErrors()) {
             return "register-page/register-candidate";
         }
         candidateService.saveCandidate(candidateDto);

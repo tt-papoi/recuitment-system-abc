@@ -17,7 +17,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Service
-public class CandidateServiceImpl implements CandidateService{
+public class CandidateServiceImpl implements CandidateService {
     @Autowired
     private UserService userService;
 

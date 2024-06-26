@@ -14,6 +14,30 @@ public class EnterpriseController {
     @GetMapping("/enterprise/home")
     public String showEnterpriseHomePage(Model model) {
         model.addAttribute("enterprise", enterpriseService.getCurrentEnterprise());
-        return "enterprise-page/enterprise-home";
+        return "enterprise-page/enterprise-posted-job";
+    }
+
+    @GetMapping("/enterprise/recruitment/posted")
+    public String showPostedJobsPage(Model model) {
+        model.addAttribute("enterprise", enterpriseService.getCurrentEnterprise());
+        return "enterprise-page/enterprise-posted-job";
+    }
+
+    @GetMapping("/enterprise/recruitment/pending-paid")
+    public String showPendingPaidPage(Model model) {
+        model.addAttribute("enterprise", enterpriseService.getCurrentEnterprise());
+        return "enterprise-page/enterprise-posted-job";
+    }
+
+    @GetMapping("/enterprise/recruitment/disapproval")
+    public String showDisapprovalPage(Model model) {
+        model.addAttribute("enterprise", enterpriseService.getCurrentEnterprise());
+        return "enterprise-page/enterprise-posted-job";
+    }
+
+    @GetMapping("/enterprise/recruitment/pending-approval")
+    public String showPendingApprovalPage(Model model) {
+        model.addAttribute("enterprise", enterpriseService.getCurrentEnterprise());
+        return "enterprise-page/enterprise-posted-job";
     }
 }

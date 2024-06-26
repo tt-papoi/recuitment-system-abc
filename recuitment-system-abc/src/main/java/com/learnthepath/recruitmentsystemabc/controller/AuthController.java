@@ -48,7 +48,7 @@ public class AuthController {
     // handler method to handle user registration form submit request
     @PostMapping("/sign-up/create-account")
     public String handleSubmitSignUpForm(@Valid @ModelAttribute("user") UserDto userDto,
-                               BindingResult result) {
+                                         BindingResult result) {
 
         if (userService.checkUserExist(userDto.getUsername())) {
             result.rejectValue("username", " ",

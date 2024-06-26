@@ -143,6 +143,14 @@ footer {
     color: white;
     margin-top: auto;
 }
+
+.error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+}
+
 @media (max-width: 768px) {
     /* Responsive adjustments */
     header {

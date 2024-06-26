@@ -30,9 +30,9 @@ public class AdminController {
     }
 
     @GetMapping("/admin/approval-enterprise/details")
-    String showEnterpriseDetailsPage(@RequestParam(value = "id") Integer id,  Model model) {
+    String showEnterpriseDetailsPage(@RequestParam(value = "id") Integer id, Model model) {
         EnterpriseDto enterpriseDto = enterpriseService.mapToEnterpriseDto(enterpriseService.findById(id));
-        if(!enterpriseDto.getStatus().equals("NON_MEMBER")) {
+        if (!enterpriseDto.getStatus().equals("NON_MEMBER")) {
             return "error/404";
         }
         model.addAttribute("enterprise", enterpriseDto);
@@ -52,7 +52,7 @@ public class AdminController {
 
     @PostMapping("/admin/approve-enterprise/disapprove")
     public String disapproveEnterprise(@RequestParam(value = "id", required = false) Integer id) {
-        enterpriseService.updateStatusEnterpriseById(id, "REJECTION");
+        enterpriseService.updateStatusEnterpriseById(id, "DISAPPROVAL");
         return "redirect:/admin/approval-enterprise";
     }
 

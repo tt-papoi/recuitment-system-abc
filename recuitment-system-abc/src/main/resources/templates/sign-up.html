@@ -21,12 +21,18 @@
     <div class="container">
         <h2>Đăng ký</h2>
         <form method="post" th:action="@{/sign-up/create-account}" th:object="${user}">
-            <q style="color:red" th:errors="*{username}"></q>
-            <input type="text" placeholder="Tên đăng nhập" th:field="*{username}">
-            <q style="color:red" th:errors="*{password}"></q>
-            <input type="password" placeholder="Mật khẩu" th:field="*{password}">
-            <q style="color:red" th:errors="*{confirmPassword}"></q>
-            <input type="password" placeholder="Nhập lại mật khẩu" th:field="*{confirmPassword}">
+            <div class="form-group">
+                <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="error-message"></span>
+                <input type="text" placeholder="Tên đăng nhập" th:field="*{username}">
+            </div>
+            <div class="form-group">
+                <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error-message"></span>
+                <input type="password" placeholder="Mật khẩu" th:field="*{password}">
+            </div>
+            <div class="form-group">
+                <span th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}" class="error-message"></span>
+                <input type="password" placeholder="Nhập lại mật khẩu" th:field="*{confirmPassword}">
+            </div>
             <button type="submit">Đăng ký</button>
             <p>Đã có tài khoản? <a th:href="@{/login}">Đăng nhập</a></p>
         </form>

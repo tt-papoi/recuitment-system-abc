@@ -6,6 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 import java.util.Set;
 
@@ -22,7 +23,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         } else if (roles.contains("LEADERSHIP")) {
             response.sendRedirect("/leadership/home");
         } else if (roles.contains("ENTERPRISE")) {
-        response.sendRedirect("/enterprise/home");
+            response.sendRedirect("/enterprise/home");
         } else if (roles.contains("CANDIDATE")) {
             response.sendRedirect("/candidate/home");
         } else if (roles.contains("NONE")) {

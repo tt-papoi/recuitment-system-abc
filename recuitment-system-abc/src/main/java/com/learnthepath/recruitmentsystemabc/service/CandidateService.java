@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 @Service
 public interface CandidateService {
     void saveCandidate(CandidateDto candidateDto);
+
     CandidateDto mapToCandidateDto(CandidateEntity candidateEntity);
+
     CandidateEntity mapToCandidateEntity(CandidateDto candidateDto);
 }

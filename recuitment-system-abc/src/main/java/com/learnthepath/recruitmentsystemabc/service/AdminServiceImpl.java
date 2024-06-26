@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class AdminServiceImpl implements AdminService{
+public class AdminServiceImpl implements AdminService {
     @Autowired
     private EnterpriseRepository enterpriseRepository;
 
@@ -21,7 +21,7 @@ public class AdminServiceImpl implements AdminService{
     public List<EnterpriseDto> getNonMemberEnterprises() {
         List<EnterpriseEntity> enterpriseEntities = enterpriseService.getNonMemberEnterprises();
         List<EnterpriseDto> enterpriseDtos = new ArrayList<>();
-        for(EnterpriseEntity entity : enterpriseEntities) {
+        for (EnterpriseEntity entity : enterpriseEntities) {
             enterpriseDtos.add(enterpriseService.mapToEnterpriseDto(entity));
         }
         return enterpriseDtos;
