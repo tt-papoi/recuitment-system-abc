@@ -78,7 +78,7 @@
         }
 
         .sidebar {
-            width: 200px; /* Độ rộng của sidebar */
+            width: 200px;
             background-color: #fff;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
@@ -139,7 +139,7 @@
             border-radius: 10px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
             text-align: center;
         }
@@ -308,9 +308,9 @@
             }
             .content table th,
             .content table td {
-                text-overflow: ellipsis; /* Để tránh tràn từ */
-                overflow: hidden; /* ẩn phần bị tràn */
-                white-space: nowrap; /* ngăn chặn xuống dòng trong  */
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
             }
         }
     </style>
@@ -328,11 +328,11 @@
     <div class="sidebar">
         <div class="menu">
             <ul>
-                <li><a href="#" onclick="toggleSubMenu(event)">Xét duyệt</a>
+                <li><a href="#" id="approvalTab" onclick="toggleSubMenu(event)">Xét duyệt</a>
                     <div class="sub-menu" id="sub-menu">
                         <ul>
-                            <li><a href="#">Tuyển dụng</a></li>
-                            <li><a href="#">Doanh nghiệp</a></li>
+                            <li><a th:href="@{/admin/approval-recruitment}" id="recruitmentTab" onclick="setActiveTab(event)">Tuyển dụng</a></li>
+                            <li><a th:href="@{/admin/approval-enterprise}" id="enterpriseTab" onclick="setActiveTab(event)">Doanh nghiệp</a></li>
                         </ul>
                     </div>
                 </li>
@@ -351,45 +351,18 @@
             <tr>
                 <th>Tên doanh nghiệp</th>
                 <th>Email</th>
-                <th>Số điện thoại</th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="enterprise, index : ${nonMemberEnterprises}" th:attr="data-index=${index.index}">
                 <td th:text="${enterprise.name}"></td>
                 <td th:text="${enterprise.email}"></td>
-                <td th:text="${enterprise.phoneNumber}"></td>
+                <td><a th:href="@{/admin/approval-enterprise/details(id=${enterprise.id})}">Chi tiết</a></td>
             </tr>
             </tbody>
         </table>
-        <div id="enterpriseDetails">
-            <h2>Thông tin chi tiết</h2>
-            <div class="detail-item">
-                <p><strong>Tên doanh nghiệp:</strong> <span id="enterpriseName"></span></p>
-            </div>
-            <div class="detail-item">
-                <p><strong>Email:</strong> <span id="enterpriseEmail"></span></p>
-            </div>
-            <div class="detail-item">
-                <p><strong>Số điện thoại:</strong> <span id="enterprisePhoneNumber"></span></p>
-            </div>
-            <div class="detail-item">
-                <p><strong>Người đại diện:</strong> <span id="enterpriseRepresentative"></span></p>
-            </div>
-            <div class="detail-item">
-                <p><strong>Mã số thuế:</strong> <span id="enterpriseTaxCode"></span></p>
-            </div>
-            <div class="detail-item">
-                <p><strong>Địa chỉ:</strong> <span id="enterpriseAddress"></span></p>
-            </div>
-            <div class="button-group">
-                <button class="btn" onclick="goBack()">Quay lại</button>
-                <button class="btn">Từ chối</button>
-                <button class="btn">Duyệt</button>
-            </div>
-        </div>
     </div>
-
 </main>
 <footer>
     <p>© 2024 Tuyển dụng ABC. All rights reserved.</p>
@@ -397,18 +370,17 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
 
-    function goBack() {
-        document.getElementById('enterpriseDetails').classList.remove('active');
-        document.getElementById('enterpriseTable').classList.remove('hidden');
-    }
-
     function toggleSubMenu(event) {
-        event.preventDefault();
         const subMenu = document.getElementById('sub-menu');
+        const approvalTab = event.target.closest('div');
+
+        // Toggle visibility of sub-menu
         if (subMenu.style.display === 'block') {
             subMenu.style.display = 'none';
+            approvalTab.classList.remove('active'); // Remove active class when hiding sub-menu
         } else {
             subMenu.style.display = 'block';
+            approvalTab.classList.add('active'); // Add active class when showing sub-menu
         }
     }
 
@@ -423,34 +395,12 @@
         });
     });
 
-    // Lấy danh sách các hàng trong bảng
-    const rows = document.querySelectorAll('#enterpriseTable tbody tr');
-
-    // Lặp qua từng hàng và thêm sự kiện click
-    rows.forEach(row => {
-    row.addEventListener('click', () => {
-        // Lấy chỉ số của hàng được click
-        const index = row.getAttribute('data-index');
-
-        // Lấy thông tin doanh nghiệp từ biến Thymeleaf
-        const enterprises = /*[[${nonMemberEnterprises}]]*/[index];
-        const enterprise = enterprises[index];
-        // Cập nhật thông tin chi tiết doanh nghiệp
-        document.getElementById('enterpriseName').textContent = enterprise.name;
-        document.getElementById('enterpriseEmail').textContent = enterprise.email;
-        document.getElementById('enterprisePhoneNumber').textContent = enterprise.phoneNumber;
-        document.getElementById('enterpriseRepresentative').textContent = enterprise.representative;
-        document.getElementById('enterpriseTaxCode').textContent = enterprise.taxCode;
-        document.getElementById('enterpriseAddress').textContent = enterprise.address;
-
-        // Hiển thị thông tin chi tiết doanh nghiệp
-        document.getElementById('enterpriseDetails').classList.add('active');
-
-        // Ẩn bảng doanh nghiệp
-        document.getElementById('enterpriseTable').classList.add('hidden');
+    // Set "Doanh nghiệp" tab active on page load
+    window.addEventListener('load', () => {
+        document.getElementById('enterpriseTab').classList.add('active');
+        document.getElementById('sub-menu').style.display = 'block'; // Ensure the sub-menu is visible
     });
-});
-/*]]>*/
+    /*]]>*/
 </script>
 </body>
 </html>

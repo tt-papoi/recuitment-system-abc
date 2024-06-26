@@ -24,4 +24,6 @@ public interface UserService {
     String determineRedirectUrl(Authentication authentication);
 
     void updateRole(Integer userId, Set<RoleEntity> newRoles);
+
+    Integer getCurrentUserId();
 }

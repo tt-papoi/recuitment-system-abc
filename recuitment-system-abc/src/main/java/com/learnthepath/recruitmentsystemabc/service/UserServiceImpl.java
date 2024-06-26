@@ -8,7 +8,6 @@ import com.learnthepath.recruitmentsystemabc.repository.UserRepository;
 import com.learnthepath.recruitmentsystemabc.security.CustomUserDetails;
 import com.learnthepath.recruitmentsystemabc.security.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -103,5 +102,18 @@ public class UserServiceImpl implements UserService {
 
         // Reload user details and update security context
         customUserDetailsService.reloadUserDetails(user.getUsername());
+    }
+
+    @Override
+    public Integer getCurrentUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof UserDetails) {
+                CustomUserDetails userDetails = (CustomUserDetails) principal;
+                return userDetails.getId();  // Assuming the username is the user ID
+            }
+        }
+        return null;
     }
 }

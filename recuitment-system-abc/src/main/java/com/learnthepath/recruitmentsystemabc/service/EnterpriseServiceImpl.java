@@ -55,8 +55,6 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         userService.updateRole(userEntity.getId(), newRole);
     }
 
-
-
     @Override
     public EnterpriseDto mapToEnterpriseDto(EnterpriseEntity enterpriseEntity) {
         EnterpriseDto dto = new EnterpriseDto();
@@ -89,5 +87,26 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     public List<EnterpriseEntity> getNonMemberEnterprises() {
         return enterpriseRepository.findByStatus("NON_MEMBER");
 
+    }
+
+    @Override
+    public void updateStatusEnterpriseById(Integer id, String status) {
+        EnterpriseEntity enterprise = enterpriseRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cannot find enterprise with id: " + id));
+
+        // update status
+        enterprise.setStatus(status);
+        enterpriseRepository.save(enterprise);
+    }
+
+    @Override
+    public EnterpriseEntity findById(Integer id) {
+        return enterpriseRepository.getReferenceById(id);
+    }
+
+    @Override
+    public EnterpriseDto getCurrentEnterprise() {
+        Integer id = userService.getCurrentUserId();
+        return mapToEnterpriseDto(enterpriseRepository.getReferenceById(id));
     }
 }

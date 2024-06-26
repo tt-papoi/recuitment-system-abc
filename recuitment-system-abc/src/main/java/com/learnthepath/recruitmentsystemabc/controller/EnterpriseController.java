@@ -1,6 +1,5 @@
 package com.learnthepath.recruitmentsystemabc.controller;
 
-import com.learnthepath.recruitmentsystemabc.dto.EnterpriseDto;
 import com.learnthepath.recruitmentsystemabc.service.EnterpriseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,7 +13,7 @@ public class EnterpriseController {
 
     @GetMapping("/enterprise/home")
     public String showEnterpriseHomePage(Model model) {
-        model.addAttribute("enterprise", new EnterpriseDto());
+        model.addAttribute("enterprise", enterpriseService.getCurrentEnterprise());
         return "enterprise-page/enterprise-home";
     }
 }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enterprise Portal - Tuyển dụng ABC</title>
+    <title>Admin Portal - Tuyển dụng ABC</title>
     <style>
         /* Global Styles */
         * {
@@ -78,7 +78,7 @@
         }
 
         .sidebar {
-            width: 200px; /* Độ rộng của sidebar */
+            width: 200px;
             background-color: #fff;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
@@ -137,6 +137,11 @@
             padding: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            text-align: center;
         }
 
         .content .create-job {
@@ -167,6 +172,7 @@
             cursor: pointer;
             border-radius: 5px;
             transition: background-color 0.3s ease;
+            margin-top: 10px;
         }
 
         .content .create-job button:hover {
@@ -198,6 +204,7 @@
 
         .content table tbody tr:hover {
             background-color: #f0f0f0;
+            cursor: pointer;
         }
 
         footer {
@@ -223,6 +230,89 @@
             font-size: 18px;
             color: white;
         }
+
+        #enterpriseDetails {
+            display: none;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        #enterpriseDetails.active {
+            display: block;
+        }
+
+        #enterpriseDetails h2 {
+            font-size: 20px;
+            color: #303030;
+            margin-bottom: 10px;
+        }
+
+        #enterpriseDetails .detail-item {
+            margin-bottom: 10px;
+        }
+
+        #enterpriseDetails .detail-item strong {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .content .button-group {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .content .button-group .btn {
+            font-size: 16px;
+            padding: 10px 20px;
+            border: 2px solid #006F18;
+            background-color: #006F18;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            margin: 0 10px;
+        }
+
+        .content .button-group .btn:hover {
+            background-color: #005F14;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            /* Responsive adjustments */
+            header {
+                padding: 15px 20px;
+            }
+            .main-content {
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+            }
+            .sidebar {
+                width: 100%;
+                margin: 0;
+                margin-bottom: 20px;
+            }
+            .content {
+                width: 100%;
+                padding: 10px;
+                overflow-x: auto; /* Scroll horizontally if table overflows */
+            }
+            .content table {
+                width: 100%;
+                table-layout: fixed;
+            }
+            .content table th,
+            .content table td {
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+            }
+        }
     </style>
 </head>
 <body>
@@ -234,86 +324,92 @@
         </a>
     </div>
 </header>
-<main class="main-content" th:object="${enterprise}">
+<main class="main-content">
     <div class="sidebar">
         <div class="menu">
-            <ul> 
-                <li><a th:if="*{status} == 'MEMBER'" href="#" onclick="toggleSubMenu(event)">Tin tuyển dụng</a>
+            <ul>
+                <li><a href="#" id="approvalTab" onclick="toggleSubMenu(event)">Xét duyệt</a>
                     <div class="sub-menu" id="sub-menu">
                         <ul>
-                            <li><a href="#">Đã đăng tuyển</a></li>
-                            <li><a href="#">Chờ thanh toán</a></li>
-                            <li><a href="#">Chờ xét duyệt</a></li>
-                            <li><a href="#">Bị từ chối</a></li>
+                            <li><a th:href="@{/admin/approval-recruitment}" id="recruitmentTab" onclick="setActiveTab(event)">Tuyển dụng</a></li>
+                            <li><a th:href="@{/admin/approval-enterprise}" id="enterpriseTab" onclick="setActiveTab(event)">Doanh nghiệp</a></li>
                         </ul>
                     </div>
                 </li>
-                <li><a th:if="*{status} == 'MEMBER'" href="#">Hồ sơ ứng viên</a></li>
-                <li><a href="#">Thông báo</a></li>
                 <li><a href="#">Tài khoản</a></li>
             </ul>
         </div>
     </div>
     <div class="content">
-        <div th:if="*{status} == 'MEMBER'" class="create-job">
+        <div class="create-job">
             <div class="job-title">
-                <p>Quản lý tin tuyển dụng</p>
+                <p>Xét duyệt doanh nghiệp thành viên</p>
             </div>
-            <button>Tạo tin tuyển dụng</button>
         </div>
-        <table th:if="*{status} == 'MEMBER'">
-            <thead>
-            <tr>
-                <th>Vị trí tuyển dụng</th>
-                <th>Lượt nộp hồ sơ</th>
-                <th>Ngày đăng tin</th>
-                <th>Hạn nộp hồ sơ</th>
-                <th>Trạng thái</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>Vị trí 1</td>
-                <td>100</td>
-                <td>01/07/2024</td>
-                <td>15/07/2024</td>
-                <td>Đang mở</td>
-            </tr>
-            </tbody>
-        </table>
-        <div th:if="*{status} == 'NON_MEMBER'" class="member-alert">
-            <strong th:text="'Đang chờ xác nhận đăng ký thành viên'"></strong>
-        </div>
-        <div th:if="*{status} == 'REJECTION'" class="member-alert">
-            <strong th:text="'Yêu cầu đăng ký thành viên bị từ chối'"></strong>
-            <strong th:text="'Vui lòng cập nhật thông tin chính xác'"></strong>
+        <div th:object="${enterprise}">
+            <h2>Thông tin chi tiết</h2>
+            <div class="detail-item" >
+                <p><strong>Tên doanh nghiệp:</strong> <span th:text="*{name}"></span></p>
+            </div>
+            <div class="detail-item">
+                <p><strong>Email:</strong> <span  th:text="*{email}"></span></p>
+            </div>
+            <div class="detail-item">
+                <p><strong>Số điện thoại:</strong> <span  th:text="*{phoneNumber}"></span></p>
+            </div>
+            <div class="detail-item">
+                <p><strong>Người đại diện:</strong> <span  th:text="*{representative}"></span></p>
+            </div>
+            <div class="detail-item">
+                <p><strong>Mã số thuế:</strong> <span  th:text="*{taxCode}"></span></p>
+            </div>
+            <div class="detail-item">
+                <p><strong>Địa chỉ:</strong> <span  th:text="*{address}"></span></p>
+            </div>
+            <div class="button-group">
+                <form th:action="@{/admin/approval-enterprise}" method="get">
+                    <button class="btn" type="submit">Quay lại</button>
+                </form>
+                <form th:action="@{/admin/approve-enterprise/disapprove}" method="post">
+                    <input type="hidden" th:name="id" th:value="*{id}">
+                    <button class="btn" type="submit">Từ chối</button>
+                </form>
+                <form th:action="@{/admin/approve-enterprise/approve}" method="post">
+                    <input type="hidden" th:name="id" th:value="*{id}">
+                    <button class="btn" type="submit">Duyệt</button>
+                </form>
+            </div>
         </div>
     </div>
 </main>
 <footer>
     <p>© 2024 Tuyển dụng ABC. All rights reserved.</p>
 </footer>
-<script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    let selectedEnterpriseId = null;
+
     function toggleSubMenu(event) {
-        event.preventDefault();
         const subMenu = document.getElementById('sub-menu');
+        const approvalTab = event.target.closest('div');
+
+        // Toggle visibility of sub-menu
         if (subMenu.style.display === 'block') {
             subMenu.style.display = 'none';
+            approvalTab.classList.remove('active'); // Remove active class when hiding sub-menu
         } else {
             subMenu.style.display = 'block';
+            approvalTab.classList.add('active'); // Add active class when showing sub-menu
         }
     }
 
-    // add events for sidebar
-    const menuItems = document.querySelectorAll('.sidebar .menu ul li a');
-    menuItems.forEach(item => {
-        item.addEventListener('click', function() {
-            // Remove the previously active class of all links
-            menuItems.forEach(link => link.classList.remove('active'));
-            // To add the active class to the clicked link
-            this.classList.add('active');
-        });
+    // Set "Doanh nghiệp" tab active on page load
+    window.addEventListener('load', () => {
+        document.getElementById('enterpriseTab').classList.add('active');
+        document.getElementById('sub-menu').style.display = 'block'; // Ensure the sub-menu is visible
     });
+    /*]]>*/
 </script>
 </body>
 </html>
