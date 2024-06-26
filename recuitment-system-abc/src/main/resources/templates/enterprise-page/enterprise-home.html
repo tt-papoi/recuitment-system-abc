@@ -223,6 +223,37 @@
             font-size: 18px;
             color: white;
         }
+        @media (max-width: 768px) {
+            /* Responsive adjustments */
+            header {
+                padding: 15px 20px;
+            }
+            .main-content {
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+            }
+            .sidebar {
+                width: 100%;
+                margin: 0;
+                margin-bottom: 20px;
+            }
+            .content {
+                width: 100%;
+                padding: 10px;
+                overflow-x: auto; /* Scroll horizontally if table overflows */
+            }
+            .content table {
+                width: 100%;
+                table-layout: fixed;
+            }
+            .content table th,
+            .content table td {
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+            }
+        }
     </style>
 </head>
 <body>
@@ -237,7 +268,7 @@
 <main class="main-content" th:object="${enterprise}">
     <div class="sidebar">
         <div class="menu">
-            <ul> 
+            <ul>
                 <li><a th:if="*{status} == 'MEMBER'" href="#" onclick="toggleSubMenu(event)">Tin tuyển dụng</a>
                     <div class="sub-menu" id="sub-menu">
                         <ul>

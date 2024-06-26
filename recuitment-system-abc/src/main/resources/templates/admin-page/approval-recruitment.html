@@ -343,7 +343,7 @@
     <div class="content">
         <div class="create-job">
             <div class="job-title">
-                <p>Xét duyệt doanh nghiệp thành viên</p>
+                <p>Xét duyệt tin tuyển dụng</p>
             </div>
         </div>
         <table id="enterpriseTable">
@@ -351,43 +351,17 @@
             <tr>
                 <th>Tên doanh nghiệp</th>
                 <th>Email</th>
-                <th>Số điện thoại</th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="enterprise, index : ${nonMemberEnterprises}" th:attr="data-index=${index.index}">
                 <td th:text="${enterprise.name}"></td>
                 <td th:text="${enterprise.email}"></td>
-                <td th:text="${enterprise.phoneNumber}"></td>
+                <td><a th:href="@{/admin/approval-enterprise/details(id=${enterprise.id})}">Chi tiết</a></td>
             </tr>
             </tbody>
         </table>
-        <div id="enterpriseDetails">
-            <h2>Thông tin chi tiết</h2>
-            <div class="detail-item">
-                <p><strong>Tên doanh nghiệp:</strong> <span id="enterpriseName"></span></p>
-            </div>
-            <div class="detail-item">
-                <p><strong>Email:</strong> <span id="enterpriseEmail"></span></p>
-            </div>
-            <div class="detail-item">
-                <p><strong>Số điện thoại:</strong> <span id="enterprisePhoneNumber"></span></p>
-            </div>
-            <div class="detail-item">
-                <p><strong>Người đại diện:</strong> <span id="enterpriseRepresentative"></span></p>
-            </div>
-            <div class="detail-item">
-                <p><strong>Mã số thuế:</strong> <span id="enterpriseTaxCode"></span></p>
-            </div>
-            <div class="detail-item">
-                <p><strong>Địa chỉ:</strong> <span id="enterpriseAddress"></span></p>
-            </div>
-            <div class="button-group">
-                <button class="btn" onclick="goBack()">Quay lại</button>
-                <button class="btn" >Từ chối</button>
-                <button class="btn" th:action="">Duyệt</button>
-            </div>
-        </div>
     </div>
 </main>
 <footer>
@@ -395,11 +369,6 @@
 </footer>
 <script th:inline="javascript">
     /*<![CDATA[*/
-
-    function goBack() {
-        document.getElementById('enterpriseDetails').classList.remove('active');
-        document.getElementById('enterpriseTable').classList.remove('hidden');
-    }
 
     function toggleSubMenu(event) {
         const subMenu = document.getElementById('sub-menu');
@@ -415,16 +384,6 @@
         }
     }
 
-    function setActiveTab(event) {
-        const menuItems = document.querySelectorAll('.sidebar .menu ul li div');
-        menuItems.forEach(div => div.classList.remove('active'));
-        event.target.closest('div').classList.add('active');
-
-        document.getElementById('enterpriseTable').classList.remove('hidden');
-        document.getElementById('enterpriseDetails').classList.remove('active');
-    }
-
-
     // add events for sidebar
     const menuItems = document.querySelectorAll('.sidebar .menu ul li a');
     menuItems.forEach(item => {
@@ -433,34 +392,6 @@
             menuItems.forEach(link => link.classList.remove('active'));
             // To add the active class to the clicked link
             this.classList.add('active');
-        });
-    });
-
-    // get rows in table
-    const rows = document.querySelectorAll('#enterpriseTable tbody tr');
-
-    // loop and add click event for each row
-    rows.forEach(row => {
-        row.addEventListener('click', () => {
-
-            // get index of clicked row
-            const index = row.getAttribute('data-index');
-
-            const enterprises = /*[[${nonMemberEnterprises}]]*/;
-            const enterprise = enterprises[index];
-
-            document.getElementById('enterpriseName').textContent = enterprise.name;
-            document.getElementById('enterpriseEmail').textContent = enterprise.email;
-            document.getElementById('enterprisePhoneNumber').textContent = enterprise.phoneNumber;
-            document.getElementById('enterpriseRepresentative').textContent = enterprise.representative;
-            document.getElementById('enterpriseTaxCode').textContent = enterprise.taxCode;
-            document.getElementById('enterpriseAddress').textContent = enterprise.address;
-
-            // show clicked enterprise details
-            document.getElementById('enterpriseDetails').classList.add('active');
-
-            // hide enterprise table
-            document.getElementById('enterpriseTable').classList.add('hidden');
         });
     });
 

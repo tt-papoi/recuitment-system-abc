@@ -1,11 +1,13 @@
 package com.learnthepath.recruitmentsystemabc.controller;
 
 import com.learnthepath.recruitmentsystemabc.dto.EnterpriseDto;
+import com.learnthepath.recruitmentsystemabc.exception.EntityNotFoundException;
 import com.learnthepath.recruitmentsystemabc.service.AdminService;
 import com.learnthepath.recruitmentsystemabc.service.EnterpriseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,7 +31,11 @@ public class AdminController {
 
     @GetMapping("/admin/approval-enterprise/details")
     String showEnterpriseDetailsPage(@RequestParam(value = "id") Integer id,  Model model) {
-        model.addAttribute("enterprise", enterpriseService.findById(id));
+        EnterpriseDto enterpriseDto = enterpriseService.mapToEnterpriseDto(enterpriseService.findById(id));
+        if(!enterpriseDto.getStatus().equals("NON_MEMBER")) {
+            return "error/404";
+        }
+        model.addAttribute("enterprise", enterpriseDto);
         return "admin-page/approval-enterprise-details";
     }
 
@@ -37,7 +43,6 @@ public class AdminController {
     String showApprovalRecruitmentPage() {
         return "admin-page/approval-recruitment";
     }
-
 
     @PostMapping("/admin/approve-enterprise/approve")
     public String approveEnterprise(@RequestParam(value = "id", required = false) Integer id) {
@@ -49,5 +54,11 @@ public class AdminController {
     public String disapproveEnterprise(@RequestParam(value = "id", required = false) Integer id) {
         enterpriseService.updateStatusEnterpriseById(id, "REJECTION");
         return "redirect:/admin/approval-enterprise";
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public String handleEntityNotFoundException(EntityNotFoundException ex, Model model) {
+        model.addAttribute("errorMessage", ex.getMessage());
+        return "error/404"; // Assuming you have an error/404.html template
     }
 }

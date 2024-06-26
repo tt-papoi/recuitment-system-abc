@@ -4,6 +4,7 @@ import com.learnthepath.recruitmentsystemabc.dto.EnterpriseDto;
 import com.learnthepath.recruitmentsystemabc.entity.EnterpriseEntity;
 import com.learnthepath.recruitmentsystemabc.entity.RoleEntity;
 import com.learnthepath.recruitmentsystemabc.entity.UserEntity;
+import com.learnthepath.recruitmentsystemabc.exception.EntityNotFoundException;
 import com.learnthepath.recruitmentsystemabc.repository.EnterpriseRepository;
 import com.learnthepath.recruitmentsystemabc.repository.RoleRepository;
 import com.learnthepath.recruitmentsystemabc.security.CustomUserDetails;
@@ -86,13 +87,12 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     @Override
     public List<EnterpriseEntity> getNonMemberEnterprises() {
         return enterpriseRepository.findByStatus("NON_MEMBER");
-
     }
 
     @Override
     public void updateStatusEnterpriseById(Integer id, String status) {
         EnterpriseEntity enterprise = enterpriseRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cannot find enterprise with id: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Cannot find enterprise with id: " + id));
 
         // update status
         enterprise.setStatus(status);
@@ -101,7 +101,8 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 
     @Override
     public EnterpriseEntity findById(Integer id) {
-        return enterpriseRepository.getReferenceById(id);
+        return enterpriseRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Cannot find enterprise with id: " + id));
     }
 
     @Override
