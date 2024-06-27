@@ -1,23 +1,24 @@
 package com.learnthepath.recruitmentsystemabc.service;
 
 import com.learnthepath.recruitmentsystemabc.dto.EnterpriseDto;
+import com.learnthepath.recruitmentsystemabc.dto.RecruitmentDto;
 import com.learnthepath.recruitmentsystemabc.entity.EnterpriseEntity;
+import com.learnthepath.recruitmentsystemabc.entity.RecruitmentEntity;
 import com.learnthepath.recruitmentsystemabc.entity.RoleEntity;
 import com.learnthepath.recruitmentsystemabc.entity.UserEntity;
 import com.learnthepath.recruitmentsystemabc.exception.EntityNotFoundException;
 import com.learnthepath.recruitmentsystemabc.repository.EnterpriseRepository;
+import com.learnthepath.recruitmentsystemabc.repository.RecruitmentRepository;
 import com.learnthepath.recruitmentsystemabc.repository.RoleRepository;
 import com.learnthepath.recruitmentsystemabc.security.CustomUserDetails;
+import com.learnthepath.recruitmentsystemabc.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class EnterpriseServiceImpl implements EnterpriseService {
@@ -30,6 +31,12 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RecruitmentRepository recruitmentRepository;
+
+    @Autowired
+    private RecruitmentService recruitmentService;
 
     @Override
     @Transactional
@@ -45,7 +52,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 
         enterpriseDto.setStatus("NON_MEMBER");
         // Map DTO to entity
-        EnterpriseEntity enterpriseEntity = mapToEnterpriseEntity(enterpriseDto);
+        EnterpriseEntity enterpriseEntity = Utils.mapToEntity(enterpriseDto);
 
         // Set the user entity and synchronize the id
         enterpriseEntity.setUser(userEntity);
@@ -57,34 +64,6 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         RoleEntity roleEntity = roleRepository.findByName("ENTERPRISE");
         Set<RoleEntity> newRole = new HashSet<>(Collections.singleton(roleEntity));
         userService.updateRole(userEntity.getId(), newRole);
-    }
-
-    @Override
-    public EnterpriseDto mapToEnterpriseDto(EnterpriseEntity enterpriseEntity) {
-        EnterpriseDto dto = new EnterpriseDto();
-        dto.setId(enterpriseEntity.getId());
-        dto.setName(enterpriseEntity.getName());
-        dto.setAddress(enterpriseEntity.getAddress());
-        dto.setEmail(enterpriseEntity.getEmail());
-        dto.setRepresentative(enterpriseEntity.getRepresentative());
-        dto.setPhoneNumber(enterpriseEntity.getPhoneNumber());
-        dto.setTaxCode(enterpriseEntity.getTaxCode());
-        dto.setStatus(enterpriseEntity.getStatus());
-        return dto;
-    }
-
-    @Override
-    public EnterpriseEntity mapToEnterpriseEntity(EnterpriseDto enterpriseDto) {
-        EnterpriseEntity entity = new EnterpriseEntity();
-        entity.setId(enterpriseDto.getId()); // Ensure to set the id if necessary
-        entity.setName(enterpriseDto.getName());
-        entity.setAddress(enterpriseDto.getAddress());
-        entity.setEmail(enterpriseDto.getEmail());
-        entity.setRepresentative(enterpriseDto.getRepresentative());
-        entity.setPhoneNumber(enterpriseDto.getPhoneNumber());
-        entity.setTaxCode(enterpriseDto.getTaxCode());
-        entity.setStatus(enterpriseDto.getStatus());
-        return entity;
     }
 
     @Override
@@ -111,6 +90,30 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     @Override
     public EnterpriseDto getCurrentEnterprise() {
         Integer id = userService.getCurrentUserId();
-        return mapToEnterpriseDto(enterpriseRepository.getReferenceById(id));
+        return Utils.mapToDto(enterpriseRepository.getReferenceById(id));
+    }
+
+    @Override
+    public List<RecruitmentDto> findPendingApprovalRecruitment() {
+        Integer id = userService.getCurrentUserId();
+        String status = "PENDING_APPROVAL";
+        List<RecruitmentEntity> entities = recruitmentRepository.findByEnterpriseIdAndStatus(id, status);
+        List<RecruitmentDto> dtos = new ArrayList<>();
+        for(RecruitmentEntity entity : entities) {
+            dtos.add(Utils.mapToDto(entity));
+        }
+
+        return dtos;
+    }
+
+    @Override
+    public void createNewRecruitment(RecruitmentDto recruitmentDto) {
+        recruitmentDto.setStatus("PENDING_APPROVAL");
+
+        // Get the enterprise using the application
+        EnterpriseEntity enterpriseEntity = findById(userService.getCurrentUserId());
+        RecruitmentEntity recruitmentEntity = Utils.mapToEntity(recruitmentDto);
+        recruitmentEntity.setEnterprise(enterpriseEntity);
+        recruitmentService.saveRecruitment(recruitmentEntity);
     }
 }

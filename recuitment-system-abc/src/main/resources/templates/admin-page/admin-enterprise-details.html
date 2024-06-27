@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal - Tuyển dụng ABC</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 150px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            color: inherit;
+            text-decoration: inherit;
+        }
+
+        .logo .highlight {
+            color: #006F18;
+            text-decoration: inherit;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .buttons .btn {
+            font-size: 16px;
+            padding: 10px 20px;
+            border: 2px solid #006F18;
+            background-color: white;
+            color: #006F18;
+            cursor: pointer;
+            border-radius: 5px;
+            white-space: nowrap;
+            text-decoration: none;
+        }
+
+        .buttons .btn.logout {
+            background-color: #006F18;
+            color: white;
+        }
+
+        .main-content {
+            display: flex;
+            margin-top: 10px;
+            padding: 20px;
+            width: 80%;
+        }
+
+        .sidebar {
+            width: 200px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-right: 20px;
+        }
+
+        .sidebar .menu {
+            padding: 10px 0;
+        }
+
+        .sidebar .menu h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #303030;
+            text-align: center;
+        }
+
+        .sidebar .menu ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar .menu ul li {
+            margin-bottom: 5px;
+            margin-top: 5px;
+        }
+
+        .sidebar .menu ul li a {
+            text-decoration: none;
+            color: #006F18;
+            font-size: 16px;
+            display: block;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar .menu ul li a:hover {
+            background-color: #f0f0f0;
+        }
+
+        .sidebar .menu ul li a.active {
+            background-color: #006F18;
+            color: white;
+        }
+
+        .sidebar .sub-menu {
+            padding-left: 20px;
+            display: none;
+        }
+
+        .content {
+            flex: 1;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            text-align: center;
+        }
+
+        footer {
+            width: 100%;
+            background-color: #006F18;
+            padding: 20px 0;
+            text-align: center;
+            color: white;
+            margin-top: auto;
+        }
+
+        .member-alert {
+            background-color: #006F18;
+            color: #333;
+            padding: 15px;
+            border: 1px solid #6ecc82;
+            border-radius: 5px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .member-alert strong {
+            font-size: 18px;
+            color: white;
+        }
+
+        #enterpriseDetails {
+            display: none;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        #enterpriseDetails.active {
+            display: block;
+        }
+
+        #enterpriseDetails h2 {
+            font-size: 20px;
+            color: #303030;
+            margin-bottom: 10px;
+        }
+
+        .content .button-group {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .content .button-group .btn {
+            font-size: 16px;
+            padding: 10px 20px;
+            border: 2px solid #006F18;
+            background-color: #006F18;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            margin: 0 30px;
+        }
+
+        .content .button-group .btn:hover {
+            background-color: #005F14;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Vertical Table Layout */
+        .vertical-table {
+            display: table;
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0px;
+        }
+
+        .vertical-table-row {
+            display: table-row;
+        }
+
+        .vertical-table-cell {
+            display: table-cell;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .vertical-table-cell strong {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        @media (max-width: 768px) {
+            /* Responsive adjustments */
+            header {
+                padding: 15px 20px;
+            }
+            .main-content {
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+            }
+            .sidebar {
+                width: 100%;
+                margin: 0;
+                margin-bottom: 20px;
+            }
+            .content {
+                width: 100%;
+                padding: 10px;
+                overflow-x: auto; /* Scroll horizontally if table overflows */
+            }
+            .content table {
+                width: 100%;
+                table-layout: fixed;
+            }
+            .content table th,
+            .content table td {
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <a class="logo" th:href="@{/}">Tuyển dụng <span class="highlight">ABC</span></a>
+    <div class="buttons">
+        <a th:href="@{/logout}">
+            <button class="btn logout">Đăng xuất</button>
+        </a>
+    </div>
+</header>
+<main class="main-content">
+    <div class="sidebar">
+        <div class="menu">
+            <ul>
+                <li><a href="#" id="approvalTab" onclick="toggleSubMenu(event)">Xét duyệt</a>
+                    <div class="sub-menu" id="sub-menu">
+                        <ul>
+                            <li><a th:href="@{/admin/recruitment}" id="recruitmentTab">Tuyển dụng</a></li>
+                            <li><a th:href="@{/admin/enterprise}" id="enterpriseTab">Doanh nghiệp</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li><a href="#">Tài khoản</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="content">
+        <div th:object="${enterprise}">
+            <div class="vertical-table">
+                <div class="vertical-table-row">
+                    <div class="vertical-table-cell">
+                        <strong>Tên doanh nghiệp:</strong>
+                    </div>
+                    <div class="vertical-table-cell">
+                        <span th:text="*{name}"></span>
+                    </div>
+                </div>
+                <div class="vertical-table-row">
+                    <div class="vertical-table-cell">
+                        <strong>Email:</strong>
+                    </div>
+                    <div class="vertical-table-cell">
+                        <span th:text="*{email}"></span>
+                    </div>
+                </div>
+                <div class="vertical-table-row">
+                    <div class="vertical-table-cell">
+                        <strong>Số điện thoại:</strong>
+                    </div>
+                    <div class="vertical-table-cell">
+                        <span th:text="*{phoneNumber}"></span>
+                    </div>
+                </div>
+                <div class="vertical-table-row">
+                    <div class="vertical-table-cell">
+                        <strong>Người đại diện:</strong>
+                    </div>
+                    <div class="vertical-table-cell">
+                        <span th:text="*{representative}"></span>
+                    </div>
+                </div>
+                <div class="vertical-table-row">
+                    <div class="vertical-table-cell">
+                        <strong>Mã số thuế:</strong>
+                    </div>
+                    <div class="vertical-table-cell">
+                        <span th:text="*{taxCode}"></span>
+                    </div>
+                </div>
+                <div class="vertical-table-row">
+                    <div class="vertical-table-cell">
+                        <strong>Địa chỉ:</strong>
+                    </div>
+                    <div class="vertical-table-cell">
+                        <span th:text="*{address}"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="button-group" th:object="${enterprise}">
+            <form th:action="@{/admin/enterprise}" method="get">
+                <button class="btn" type="submit">Quay lại</button>
+            </form>
+            <form th:action="@{/admin/enterprise/disapprove}" method="post">
+                <input type="hidden" th:name="id" th:value="*{id}">
+                <button class="btn" type="submit">Từ chối</button>
+            </form>
+            <form th:action="@{/admin/enterprise/approve}" method="post">
+                <input type="hidden" th:name="id" th:value="*{id}">
+                <button class="btn" type="submit">Duyệt</button>
+            </form>
+        </div>
+    </div>
+</main>
+<footer>
+    <p>© 2024 Tuyển dụng ABC. All rights reserved.</p>
+</footer>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    function toggleSubMenu(event) {
+        const subMenu = document.getElementById('sub-menu');
+        const approvalTab = event.target.closest('div');
+
+        // Toggle visibility of sub-menu
+        if (subMenu.style.display === 'block') {
+            subMenu.style.display = 'none';
+            approvalTab.classList.remove('active'); // Remove active class when hiding sub-menu
+        } else {
+            subMenu.style.display = 'block';
+            approvalTab.classList.add('active'); // Add active class when showing sub-menu
+        }
+    }
+
+    // Set "Doanh nghiệp" tab active on page load
+    window.addEventListener('load', () => {
+        document.getElementById('enterpriseTab').classList.add('active');
+        document.getElementById('sub-menu').style.display = 'block'; // Ensure the sub-menu is visible
+    });
+    /*]]>*/
+</script>
+</body>
+</html>
+

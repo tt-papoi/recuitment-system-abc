@@ -1,10 +1,8 @@
 package com.learnthepath.recruitmentsystemabc.dto;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,11 +21,11 @@ public class RecruitmentDto {
     @NotEmpty(message = "Applied position cannot be blank")
     private String appliedPosition;
 
-    @NotEmpty(message = "Requirment cannot be blank")
-    private String requirments;
+    @NotEmpty(message = "Requirement cannot be blank")
+    private String requirements;
 
-    @NotEmpty(message = "Job decription cannot be blank")
-    private String jobDecription;
+    @NotEmpty(message = "Job description cannot be blank")
+    private String jobDescription;
 
     @NotNull(message = "Number of candidates cannot be blank")
     private Integer numberCandidates;
@@ -43,4 +41,6 @@ public class RecruitmentDto {
     @Future(message = "Date must be in the future")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
+
+    private EnterpriseDto enterprise;
 }

@@ -1,9 +1,12 @@
 package com.learnthepath.recruitmentsystemabc.controller;
 
 import com.learnthepath.recruitmentsystemabc.dto.EnterpriseDto;
+import com.learnthepath.recruitmentsystemabc.dto.RecruitmentDto;
 import com.learnthepath.recruitmentsystemabc.exception.EntityNotFoundException;
 import com.learnthepath.recruitmentsystemabc.service.AdminService;
 import com.learnthepath.recruitmentsystemabc.service.EnterpriseService;
+import com.learnthepath.recruitmentsystemabc.service.RecruitmentService;
+import com.learnthepath.recruitmentsystemabc.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,38 +25,50 @@ public class AdminController {
     @Autowired
     EnterpriseService enterpriseService;
 
-    @GetMapping({"/admin/home", "/admin/approval-enterprise"})
+    @GetMapping({"/admin/home", "/admin/enterprise"})
     String showApprovalEnterprisePage(Model model) {
         List<EnterpriseDto> notMemberEnterprises = adminService.getNonMemberEnterprises();
         model.addAttribute("nonMemberEnterprises", notMemberEnterprises);
-        return "admin-page/approval-enterprise";
+        return "admin-page/admin-enterprise";
     }
 
-    @GetMapping("/admin/approval-enterprise/details")
+    @GetMapping("/admin/enterprise/details")
     String showEnterpriseDetailsPage(@RequestParam(value = "id") Integer id, Model model) {
-        EnterpriseDto enterpriseDto = enterpriseService.mapToEnterpriseDto(enterpriseService.findById(id));
+        EnterpriseDto enterpriseDto = Utils.mapToDto(enterpriseService.findById(id));
         if (!enterpriseDto.getStatus().equals("NON_MEMBER")) {
             return "error/404";
         }
         model.addAttribute("enterprise", enterpriseDto);
-        return "admin-page/approval-enterprise-details";
+        return "admin-page/admin-enterprise-details";
     }
 
-    @GetMapping("/admin/approval-recruitment")
-    String showApprovalRecruitmentPage() {
-        return "admin-page/approval-recruitment";
-    }
-
-    @PostMapping("/admin/approve-enterprise/approve")
+    @PostMapping("/admin/enterprise/approve")
     public String approveEnterprise(@RequestParam(value = "id", required = false) Integer id) {
         enterpriseService.updateStatusEnterpriseById(id, "MEMBER");
-        return "redirect:/admin/approval-enterprise";
+        return "redirect:/admin/enterprise";
     }
 
-    @PostMapping("/admin/approve-enterprise/disapprove")
+    @PostMapping("/admin/enterprise/disapprove")
     public String disapproveEnterprise(@RequestParam(value = "id", required = false) Integer id) {
         enterpriseService.updateStatusEnterpriseById(id, "DISAPPROVAL");
-        return "redirect:/admin/approval-enterprise";
+        return "redirect:/admin/enterprise";
+    }
+
+    @GetMapping("/admin/recruitment")
+    String showApprovalRecruitmentPage(Model model) {
+        List<RecruitmentDto> pendingApprovalRecruitment = adminService.getRecruitmentByStatus("PENDING_APPROVAL");
+        model.addAttribute("recruitments", pendingApprovalRecruitment);
+        return "admin-page/admin-recruitment";
+    }
+
+    @GetMapping("/admin/recruitment/details")
+    String showRecruitmentDetailsPage(@RequestParam(value = "id") Integer id, Model model) {
+        RecruitmentDto recruitmentDto = Utils.mapToDto(adminService.findById(id));
+        if (!recruitmentDto.getStatus().equals("PENDING_APPROVAL")) {
+            return "error/404";
+        }
+        model.addAttribute("recruitment", recruitmentDto);
+        return "admin-page/admin-recruitment-details";
     }
 
     @ExceptionHandler(EntityNotFoundException.class)

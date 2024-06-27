@@ -5,11 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.util.Set;
 
 @Setter
 @Getter
@@ -20,16 +18,17 @@ import java.util.Set;
 public class RecruitmentEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "recruitment_id")
     private Integer id;
 
     @Column(name = "applied_position", nullable = false)
     private String appliedPosition;
 
     @Column(name = "requirements", nullable = false)
-    private String requirments;
+    private String requirements;
 
-    @Column(name = "job_decription", nullable = false)
-    private String jobDecription;
+    @Column(name = "job_description", nullable = false)
+    private String jobDescription;
 
     @Column(name = "number_candidates", nullable = false)
     private Integer numberCandidates;
@@ -45,11 +44,7 @@ public class RecruitmentEntity {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "enterprises_recruitments",
-            joinColumns = @JoinColumn(name = "recruitment_id"),
-            inverseJoinColumns = @JoinColumn(name = "enterprise_id")
-    )
-    private Set<EnterpriseEntity> enterprises;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "enterprise_id", nullable = false)
+    private EnterpriseEntity enterprise;
 }

@@ -19,14 +19,6 @@ public class EnterpriseEntity {
     @Id
     private Integer id;
 
-    @MapsId
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
-    private UserEntity user;
-
-    @ManyToMany(mappedBy = "enterprises")
-    private Set<RecruitmentEntity> recruitments;
-
     @Column(name = "name", nullable = false)
     private String name;
 
@@ -47,4 +39,12 @@ public class EnterpriseEntity {
 
     @Column(name = "status", nullable = false)
     private String status;
+
+    @MapsId
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")
+    private UserEntity user;
+
+    @OneToMany(mappedBy = "enterprise", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<RecruitmentEntity> recruitments;
 }

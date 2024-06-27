@@ -19,8 +19,6 @@ public interface UserService {
 
     List<UserDto> findAllUsers();
 
-    UserDto mapToUserDto(UserEntity userEntity);
-
     String determineRedirectUrl(Authentication authentication);
 
     void updateRole(Integer userId, Set<RoleEntity> newRoles);

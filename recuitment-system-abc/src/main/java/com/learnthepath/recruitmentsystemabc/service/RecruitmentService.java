@@ -6,8 +6,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface RecruitmentService {
-    void saveRecruitment(RecruitmentDto recruitmentDto);
-    void createNewRecruitment(RecruitmentDto recruitmentDto);
-    RecruitmentEntity mapToRecruitmentEntity(RecruitmentDto dto);
-    RecruitmentDto mapToRecruitmentDto(RecruitmentEntity entity);
+    void saveRecruitment(RecruitmentEntity recruitmentEntity);
+    RecruitmentEntity findById(Integer id);
 }

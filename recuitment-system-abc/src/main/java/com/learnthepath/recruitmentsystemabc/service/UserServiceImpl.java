@@ -7,6 +7,7 @@ import com.learnthepath.recruitmentsystemabc.repository.RoleRepository;
 import com.learnthepath.recruitmentsystemabc.repository.UserRepository;
 import com.learnthepath.recruitmentsystemabc.security.CustomUserDetails;
 import com.learnthepath.recruitmentsystemabc.security.CustomUserDetailsService;
+import com.learnthepath.recruitmentsystemabc.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -58,16 +59,9 @@ public class UserServiceImpl implements UserService {
         List<UserEntity> userEntityList = userRepository.findAll();
         List<UserDto> userDtoList = new ArrayList<>();
         for (UserEntity userEntity : userEntityList) {
-            userDtoList.add(mapToUserDto(userEntity));
+            userDtoList.add(Utils.mapToDto(userEntity));
         }
         return userDtoList;
-    }
-
-    @Override
-    public UserDto mapToUserDto(UserEntity userEntity) {
-        UserDto userDto = new UserDto();
-        userDto.setUsername(userEntity.getUsername());
-        return userDto;
     }
 
     @Override

@@ -140,7 +140,7 @@
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
-            align-items: center;
+            align-items: flex-start; /* Align items to the left */
             text-align: center;
         }
 
@@ -161,13 +161,13 @@
             font-size: 18px;
             color: #303030;
             font-weight: bold;
-            margin: 0;
+            margin: 0; /* Remove margin to prevent space */
         }
 
         .content .create-job button {
             font-size: 16px;
-            padding: 12px 24px;
-            border: none;
+            padding: 10px 20px;
+            border: 2px solid #006F18;
             background-color: #006F18;
             color: white;
             cursor: pointer;
@@ -179,52 +179,41 @@
             background-color: #005F14;
         }
 
-        .content .input-group {
+        .content table {
             width: 100%;
-            width: 500px;
-            margin-bottom: 15px;
-            background-color: white;
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-collapse: collapse;
+            margin-top: 20px;
         }
 
-        .content .input-group input,
-        .content .input-group textarea {
-            width: 100%;
+        .content table th,
+        .content table td {
             padding: 12px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 5px rgba(0, 111, 24, 0.1);
+            text-align: left;
+            border-bottom: 1px solid #ddd;
         }
 
-        .content .input-group textarea {
-            resize: vertical;
-            min-height: 150px; /* Minimum height */
-            height: auto; /* Let the height adjust based on content */
+        .content table th {
+            background-color: #f2f2f2;
+            color: #303030;
+            font-weight: bold;
         }
 
-        .content .input-group input:focus,
-        .content .input-group textarea:focus {
-            border-color: #006F18;
-            box-shadow: 0 0 10px rgba(0, 111, 24, 0.2);
+        .content table td {
+            color: #606060;
         }
 
-        .content .job-form button[type="submit"] {
-            font-size: 16px;
-            padding: 12px 24px;
-            border: none;
-            background-color: #006F18;
-            color: white;
+        .content table tbody tr:hover {
+            background-color: #f0f0f0;
             cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
         }
 
-        .content .job-form button[type="submit"]:hover {
-            background-color: #005F14;
+        footer {
+            width: 100%;
+            background-color: #006F18;
+            padding: 20px 0;
+            text-align: center;
+            color: white;
+            margin-top: auto;
         }
 
         .member-alert {
@@ -235,21 +224,11 @@
             border-radius: 5px;
             text-align: center;
             width: 100%;
-            margin-bottom: 20px;
         }
 
         .member-alert strong {
             font-size: 18px;
             color: white;
-        }
-
-        footer {
-            width: 100%;
-            background-color: #006F18;
-            padding: 20px 0;
-            text-align: center;
-            color: white;
-            margin-top: auto;
         }
 
         @media (max-width: 768px) {
@@ -270,7 +249,17 @@
             .content {
                 width: 100%;
                 padding: 10px;
-                overflow-x: auto;
+                overflow-x: auto; /* Scroll horizontally if table overflows */
+            }
+            .content table {
+                width: 100%;
+                table-layout: fixed;
+            }
+            .content table th,
+            .content table td {
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
             }
         }
     </style>
@@ -314,43 +303,36 @@
     <div class="content">
         <div th:if="*{status} == 'MEMBER'" class="create-job">
             <div class="job-title">
-                <p>Tạo tin tuyển dụng</p>
+                <p>Tin đã đăng tuyển</p>
             </div>
             <form th:action="@{/enterprise/recruitment/create}" method="get" class="job-button">
                 <button type="submit">Tạo tin tuyển dụng</button>
             </form>
         </div>
-        <form th:action="@{/enterprise/recruitment/create/submit}" method="post" class="job-form" th:object="${recruitment}">
-            <div class="input-group">
-                <label for="position">Vị trí tuyển dụng:</label>
-                <input type="text" id="position" name="position" th:field="*{appliedPosition}" required>
-            </div>
-            <div class="input-group">
-                <label for="quantity">Số lượng ứng viên:</label>
-                <input type="number" id="quantity" name="quantity" th:field="*{numberCandidates}" required>
-            </div>
-            <div class="input-group">
-                <label for="description">Mô tả công việc:</label>
-                <textarea id="description" name="description" th:field="*{jobDescription}" required></textarea>
-            </div>
-            <div class="input-group">
-                <label for="requirements">Yêu cầu ứng viên:</label>
-                <textarea id="requirements" name="requirements" th:field="*{requirements}" required></textarea>
-            </div>
-            <div class="input-group">
-                <label for="startDate">Ngày bắt đầu:</label>
-                <input type="date" id="startDate" name="startDate" th:field="*{startDate}" required>
-            </div>
-            <div class="input-group">
-                <label for="endDate">Ngày kết thúc:</label>
-                <input type="date" id="endDate" name="endDate" th:field="*{endDate}" required>
-            </div>
-            <button type="submit">Xác nhận</button>
-        </form>
+        <table th:if="*{status} == 'MEMBER'">
+            <thead>
+            <tr>
+                <th>Vị trí tuyển dụng</th>
+                <th>Ngày bắt đầu</th>
+                <th>Ngày kết thúc</th>
+                <th>Số lượng ứng viên</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="recruitment, index : ${pendingApprovalRecruitment}">
+                <td th:text="${recruitment.appliedPosition}"></td>
+                <td th:text="${#temporals.format(recruitment.startDate, 'dd-MM-yyyy')}"></td>
+                <td th:text="${#temporals.format(recruitment.endDate, 'dd-MM-yyyy')}"></td>
+                <td th:text="${recruitment.numberCandidates}"></td>
+                <td><a th:href="@{#(id=${recruitment.id})}">Chi tiết</a></td>
+            </tr>
+            </tbody>
+        </table>
         <div th:if="*{status} == 'NON_MEMBER'" class="member-alert">
             <strong th:text="'Đang chờ xác nhận đăng ký thành viên'"></strong>
         </div>
-        <div th:if="*{status} == 'DISAPPROVAL'" class="member-alert">
+        <div th:if="*{status} == 'REJECTION'" class="member-alert">
             <strong th:text="'Yêu cầu đăng ký thành viên bị từ chối'"></strong>
             <strong th:text="'Vui lòng cập nhật thông tin chính xác'"></strong>
         </div>
@@ -386,8 +368,13 @@
             this.classList.add('active');
         });
     });
+
+    // Set "Đã đăng tuyển" tab active on page load
+    window.addEventListener('load', () => {
+        document.getElementById('postedTab').classList.add('active');
+        document.getElementById('recruitmentSubMenu').style.display = 'block'; // Ensure the sub-menu is visible
+    });
     /*]]>*/
 </script>
 </body>
 </html>
-
