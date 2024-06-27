@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "enterprises")
 @Getter
@@ -21,6 +23,9 @@ public class EnterpriseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
     private UserEntity user;
+
+    @ManyToMany(mappedBy = "enterprises")
+    private Set<RecruitmentEntity> recruitments;
 
     @Column(name = "name", nullable = false)
     private String name;
