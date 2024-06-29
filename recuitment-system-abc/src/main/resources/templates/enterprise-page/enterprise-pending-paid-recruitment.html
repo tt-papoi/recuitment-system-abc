@@ -320,12 +320,12 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="recruitment, index : ${pendingApprovalRecruitment}">
-                <td th:text="${recruitment.appliedPosition}"></td>
-                <td th:text="${#temporals.format(recruitment.startDate, 'dd-MM-yyyy')}"></td>
-                <td th:text="${#temporals.format(recruitment.endDate, 'dd-MM-yyyy')}"></td>
-                <td th:text="${recruitment.numberCandidates}"></td>
-                <td><a th:href="@{#(id=${recruitment.id})}">Chi tiết</a></td>
+            <tr th:each="invoice, index : ${invoices}">
+                <td th:text="${invoice.recruitment.appliedPosition}"></td>
+                <td th:text="${#temporals.format(invoice.recruitment.startDate, 'dd-MM-yyyy')}"></td>
+                <td th:text="${#temporals.format(invoice.recruitment.endDate, 'dd-MM-yyyy')}"></td>
+                <td th:text="${invoice.recruitment.numberCandidates}"></td>
+                <td><a th:href="@{/enterprise/recruitment/pending-paid/details(id=${invoice.id})}">Thanh toán</a></td>
             </tr>
             </tbody>
         </table>

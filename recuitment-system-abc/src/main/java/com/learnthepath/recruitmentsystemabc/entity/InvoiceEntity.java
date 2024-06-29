@@ -16,6 +16,8 @@ import java.time.LocalDate;
 @Table(name = "invoices")
 public class InvoiceEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "invoice_id")
     private Integer id;
 
     @Column(name = "payment_date")

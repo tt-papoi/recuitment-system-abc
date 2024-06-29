@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Portal - Tuyển dụng ABC</title>
+    <title>Enterprise Portal - Tuyển dụng ABC</title>
     <style>
         /* Global Styles */
         * {
@@ -284,27 +284,38 @@
     <div class="sidebar">
         <div class="menu">
             <ul>
-                <li><a href="#" id="approvalTab" onclick="toggleSubMenu(event)">Xét duyệt</a>
-                    <div class="sub-menu" id="sub-menu">
+                <li><a th:if="*{status} == 'MEMBER'" href="#" onclick="toggleSubMenu(event, 'recruitmentSubMenu')">Tin tuyển dụng</a>
+                    <div class="sub-menu" id="recruitmentSubMenu" th:if="*{status} == 'MEMBER'">
                         <ul>
-                            <li><a th:href="@{/admin/recruitment}" id="recruitmentTab">Tuyển dụng</a></li>
-                            <li><a th:href="@{/admin/enterprise}" id="enterpriseTab">Doanh nghiệp</a></li>
+                            <li><a th:href="@{/enterprise/recruitment/posted}" id="postedTab">Đã đăng tuyển</a></li>
+                            <li><a th:href="@{/enterprise/recruitment/pending-approval}" id="pendingApprovalTab">Chờ xét duyệt</a></li>
+                            <li><a th:href="@{/enterprise/recruitment/disapproval}" id="disapprovalTab">Bị từ chối</a></li>
                         </ul>
                     </div>
                 </li>
+                <li><a th:if="*{status} == 'MEMBER'" href="#" onclick="toggleSubMenu(event, 'paymentSubMenu')">Thanh toán</a>
+                    <div class="sub-menu" id="paymentSubMenu" th:if="*{status} == 'MEMBER'">
+                        <ul>
+                            <li><a th:href="@{/enterprise/recruitment/pending-paid}" id="pendingPaidTab">Chờ thanh toán</a></li>
+                            <li><a th:href="@{#}" id="invoiceTab">Hoá đơn</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li><a th:if="*{status} == 'MEMBER'" href="#">Hồ sơ ứng viên</a></li>
+                <li><a href="#">Thông báo</a></li>
                 <li><a href="#">Tài khoản</a></li>
             </ul>
         </div>
     </div>
     <div class="content">
-        <div th:object="${recruitment}">
+        <div th:object="${invoice}">
             <div class="vertical-table">
                 <div class="vertical-table-row">
                     <div class="vertical-table-cell">
                         <strong>Tên doanh nghiệp:</strong>
                     </div>
                     <div class="vertical-table-cell">
-                        <span th:text="*{enterprise.name}"></span>
+                        <span th:text="*{recruitment.enterprise.name}"></span>
                     </div>
                 </div>
                 <div class="vertical-table-row">
@@ -312,7 +323,7 @@
                         <strong>Email:</strong>
                     </div>
                     <div class="vertical-table-cell">
-                        <span th:text="*{enterprise.email}"></span>
+                        <span th:text="*{recruitment.enterprise.email}"></span>
                     </div>
                 </div>
                 <div class="vertical-table-row">
@@ -320,15 +331,7 @@
                         <strong>Số điện thoại:</strong>
                     </div>
                     <div class="vertical-table-cell">
-                        <span th:text="*{enterprise.phoneNumber}"></span>
-                    </div>
-                </div>
-                <div class="vertical-table-row">
-                    <div class="vertical-table-cell">
-                        <strong>Người đại diện:</strong>
-                    </div>
-                    <div class="vertical-table-cell">
-                        <span th:text="*{enterprise.representative}"></span>
+                        <span th:text="*{recruitment.enterprise.phoneNumber}"></span>
                     </div>
                 </div>
                 <div class="vertical-table-row">
@@ -336,7 +339,7 @@
                         <strong>Mã số thuế:</strong>
                     </div>
                     <div class="vertical-table-cell">
-                        <span th:text="*{enterprise.taxCode}"></span>
+                        <span th:text="*{recruitment.enterprise.taxCode}"></span>
                     </div>
                 </div>
                 <div class="vertical-table-row">
@@ -344,7 +347,7 @@
                         <strong>Địa chỉ:</strong>
                     </div>
                     <div class="vertical-table-cell">
-                        <span th:text="*{enterprise.address}"></span>
+                        <span th:text="*{recruitment.enterprise.address}"></span>
                     </div>
                 </div>
                 <div class="vertical-table-row">
@@ -352,7 +355,7 @@
                         <strong>Vị trí tuyển dụng</strong>
                     </div>
                     <div class="vertical-table-cell">
-                        <span th:text="*{appliedPosition}"></span>
+                        <span th:text="*{recruitment.appliedPosition}"></span>
                     </div>
                 </div>
                 <div class="vertical-table-row">
@@ -360,7 +363,7 @@
                         <strong>Số lượng ứng viên</strong>
                     </div>
                     <div class="vertical-table-cell">
-                        <span th:text="*{numberCandidates}"></span>
+                        <span th:text="*{recruitment.numberCandidates}"></span>
                     </div>
                 </div>
                 <div class="vertical-table-row">
@@ -368,7 +371,7 @@
                         <strong>Ngày bắt đầu</strong>
                     </div>
                     <div class="vertical-table-cell">
-                        <span th:text="*{startDate}"></span>
+                        <span th:text="*{#temporals.format(recruitment.startDate,'dd-MM-yyyy')}"></span>
                     </div>
                 </div>
                 <div class="vertical-table-row">
@@ -376,38 +379,26 @@
                         <strong>Ngày kết thúc</strong>
                     </div>
                     <div class="vertical-table-cell">
-                        <span th:text="*{endDate}"></span>
+                        <span  th:text="*{#temporals.format(recruitment.endDate,'dd-MM-yyyy')}"></span>
                     </div>
                 </div>
                 <div class="vertical-table-row">
                     <div class="vertical-table-cell">
-                        <strong>Mô tả công việc</strong>
+                        <strong>Thành tiền</strong>
                     </div>
                     <div class="vertical-table-cell">
-                        <span class="formatted-text" th:text="*{jobDescription}"></span>
-                    </div>
-                </div>
-                <div class="vertical-table-row">
-                    <div class="vertical-table-cell">
-                        <strong>Yêu cầu ứng viên</strong>
-                    </div>
-                    <div class="vertical-table-cell">
-                        <span class="formatted-text" th:text="*{requirements}"></span>
+                        <span th:text="*{#numbers.formatDecimal(totalAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="button-group" th:object="${recruitment}">
-            <form th:action="@{/admin/recruitment}" method="get">
+        <div class="button-group" th:object="${invoice}">
+            <form th:action="@{/enterprise/recruitment/pending-paid}" method="get">
                 <button class="btn" type="submit">Quay lại</button>
             </form>
-            <form th:action="@{/admin/recruitment/disapprove}" method="post" onsubmit="return confirmDisapprove()">
+            <form th:action="@{/enterprise/recruitment/pending-paid/details}" method="post">
                 <input type="hidden" th:name="id" th:value="*{id}">
-                <button class="btn" type="submit">Từ chối</button>
-            </form>
-            <form th:action="@{/admin/recruitment/approve}" method="post" onsubmit="return confirmApprove()">
-                <input type="hidden" th:name="id" th:value="*{id}">
-                <button class="btn" type="submit">Duyệt</button>
+                <button class="btn" type="submit">Thanh toán</button>
             </form>
         </div>
     </div>
@@ -437,14 +428,6 @@
         document.getElementById('enterpriseTab').classList.add('active');
         document.getElementById('sub-menu').style.display = 'block'; // Ensure the sub-menu is visible
     });
-
-    function confirmDisapprove() {
-        return confirm("Bạn có chắc chắn muốn từ chối đơn này không?");
-    }
-
-    function confirmApprove() {
-        return confirm("Bạn có chắc chắn muốn duyệt đơn này không?");
-    }
     /*]]>*/
 </script>
 </body>

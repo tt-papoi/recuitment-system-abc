@@ -1,13 +1,7 @@
 package com.learnthepath.recruitmentsystemabc.utils;
 
-import com.learnthepath.recruitmentsystemabc.dto.CandidateDto;
-import com.learnthepath.recruitmentsystemabc.dto.EnterpriseDto;
-import com.learnthepath.recruitmentsystemabc.dto.RecruitmentDto;
-import com.learnthepath.recruitmentsystemabc.dto.UserDto;
-import com.learnthepath.recruitmentsystemabc.entity.CandidateEntity;
-import com.learnthepath.recruitmentsystemabc.entity.EnterpriseEntity;
-import com.learnthepath.recruitmentsystemabc.entity.RecruitmentEntity;
-import com.learnthepath.recruitmentsystemabc.entity.UserEntity;
+import com.learnthepath.recruitmentsystemabc.dto.*;
+import com.learnthepath.recruitmentsystemabc.entity.*;
 
 public class Utils {
     public static UserDto mapToDto(UserEntity userEntity) {
@@ -88,6 +82,28 @@ public class Utils {
         entity.setId(candidateDto.getId());
         entity.setEmail(candidateDto.getEmail());
         entity.setPhoneNumber(candidateDto.getPhoneNumber());
+        return entity;
+    }
+
+    public static InvoiceDto mapToDto(InvoiceEntity entity) {
+        InvoiceDto dto = new InvoiceDto();
+        dto.setId(entity.getId());
+        dto.setPaymentDate(entity.getPaymentDate());
+        dto.setMethod(entity.getMethod());
+        dto.setTotalAmount(entity.getTotalAmount());
+        dto.setStatus(entity.getStatus());
+        dto.setRecruitment(mapToDto(entity.getRecruitment()));
+        return dto;
+    }
+
+    public static InvoiceEntity mapToEntity(InvoiceDto dto) {
+        InvoiceEntity entity = new InvoiceEntity();
+        entity.setId(dto.getId());
+        entity.setPaymentDate(dto.getPaymentDate());
+        entity.setMethod(dto.getMethod());
+        entity.setTotalAmount(dto.getTotalAmount());
+        entity.setStatus(dto.getStatus());
+        entity.setRecruitment(mapToEntity(dto.getRecruitment()));
         return entity;
     }
 }

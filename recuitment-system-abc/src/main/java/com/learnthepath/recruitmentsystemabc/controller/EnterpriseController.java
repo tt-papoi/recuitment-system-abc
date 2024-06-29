@@ -1,7 +1,10 @@
 package com.learnthepath.recruitmentsystemabc.controller;
 
+import com.learnthepath.recruitmentsystemabc.dto.InvoiceDto;
 import com.learnthepath.recruitmentsystemabc.dto.RecruitmentDto;
 import com.learnthepath.recruitmentsystemabc.service.EnterpriseService;
+import com.learnthepath.recruitmentsystemabc.service.InvoiceService;
+import com.learnthepath.recruitmentsystemabc.service.RecruitmentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -17,6 +21,11 @@ public class EnterpriseController {
     @Autowired
     private EnterpriseService enterpriseService;
 
+    @Autowired
+    RecruitmentService recruitmentService;
+
+    @Autowired
+    private InvoiceService invoiceService;
 
     @GetMapping("/enterprise/home")
     public String showEnterpriseHomePage(Model model) {
@@ -33,6 +42,10 @@ public class EnterpriseController {
     @GetMapping("/enterprise/recruitment/pending-paid")
     public String showPendingPaidPage(Model model) {
         model.addAttribute("enterprise", enterpriseService.getCurrentEnterprise());
+        Integer enterpriseId = enterpriseService.getCurrentEnterprise().getId();
+        String status = "UNPAID";
+        List<InvoiceDto> unpaidInvoices = invoiceService.findByEnterpriseIdAndStatus(enterpriseId, status);
+        model.addAttribute("invoices", unpaidInvoices);
         return "enterprise-page/enterprise-pending-paid-recruitment";
     }
 
@@ -60,7 +73,17 @@ public class EnterpriseController {
 
     @PostMapping("/enterprise/recruitment/create/submit")
     String handleCreateRecruitment(@Valid RecruitmentDto recruitmentDto, BindingResult result) {
-        enterpriseService.createNewRecruitment(recruitmentDto);
+        recruitmentService.createNewRecruitment(recruitmentDto);
         return "redirect:/enterprise/recruitment/pending-approval";
+    }
+
+    @GetMapping("/enterprise/recruitment/pending-paid/details")
+    String showPaymentDetails(@RequestParam(value = "id") Integer invoiceId, Model model) {
+        InvoiceDto invoiceDto = invoiceService.findById(invoiceId);
+        if (!invoiceDto.getStatus().equals("UNPAID")) {
+            return "error/404";
+        }
+        model.addAttribute("invoice", invoiceDto);
+        return "enterprise-page/enterprise-recruitment-payment-details";
     }
 }

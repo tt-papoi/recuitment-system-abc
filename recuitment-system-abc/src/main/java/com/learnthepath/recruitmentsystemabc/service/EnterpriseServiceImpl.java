@@ -8,7 +8,6 @@ import com.learnthepath.recruitmentsystemabc.entity.RoleEntity;
 import com.learnthepath.recruitmentsystemabc.entity.UserEntity;
 import com.learnthepath.recruitmentsystemabc.exception.EntityNotFoundException;
 import com.learnthepath.recruitmentsystemabc.repository.EnterpriseRepository;
-import com.learnthepath.recruitmentsystemabc.repository.InvoiceRepository;
 import com.learnthepath.recruitmentsystemabc.repository.RecruitmentRepository;
 import com.learnthepath.recruitmentsystemabc.repository.RoleRepository;
 import com.learnthepath.recruitmentsystemabc.security.CustomUserDetails;
@@ -32,9 +31,6 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 
     @Autowired
     private RecruitmentRepository recruitmentRepository;
-
-    @Autowired
-    private InvoiceRepository
 
     @Autowired
     private UserService userService;
@@ -78,9 +74,9 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public EnterpriseEntity findById(Integer id) {
-        return enterpriseRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Cannot find enterprise with id: " + id));
+    public EnterpriseDto findById(Integer id) {
+        return Utils.mapToDto(enterpriseRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Cannot find enterprise with id: " + id)));
     }
 
     @Override
@@ -103,13 +99,13 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public void createNewRecruitment(RecruitmentDto recruitmentDto) {
-        recruitmentDto.setStatus("PENDING_APPROVAL");
-
-        // Get the enterprise using the application
-        EnterpriseEntity enterpriseEntity = findById(userService.getCurrentUserId());
-        RecruitmentEntity recruitmentEntity = Utils.mapToEntity(recruitmentDto);
-        recruitmentEntity.setEnterprise(enterpriseEntity);
-        recruitmentRepository.save(recruitmentEntity);
+    public List<EnterpriseDto> getNonMemberEnterprises() {
+        String status = "NON_MEMBER";
+        List<EnterpriseEntity> nonMemberEnterprises = enterpriseRepository.findByStatus(status);
+        List<EnterpriseDto> enterpriseDtos = new ArrayList<>();
+        for (EnterpriseEntity entity : nonMemberEnterprises) {
+            enterpriseDtos.add(Utils.mapToDto(entity));
+        }
+        return enterpriseDtos;
     }
 }

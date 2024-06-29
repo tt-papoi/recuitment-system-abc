@@ -9,6 +9,15 @@ import java.util.List;
 
 @Repository
 public interface InvoiceRepository extends JpaRepository<InvoiceEntity, Integer> {
-    @Query("SELECT i FROM InvoiceEntity i WHERE i.recruitment.id = :recruitmentId AND r.status = :status")
+    @Query("SELECT i " +
+            "FROM InvoiceEntity i " +
+            "WHERE i.recruitment.id = :recruitmentId " +
+            "AND i.status = :status")
     List<InvoiceEntity> findByRecruitmentIdAndStatus(Integer recruitmentId, String status);
+
+    @Query("SELECT i " +
+            "FROM InvoiceEntity i " +
+            "WHERE i.recruitment.enterprise.id = :enterpriseId " +
+            "AND i.status = :status")
+    List<InvoiceEntity> findByEnterpriseIdAndStatus(Integer enterpriseId, String status);
 }

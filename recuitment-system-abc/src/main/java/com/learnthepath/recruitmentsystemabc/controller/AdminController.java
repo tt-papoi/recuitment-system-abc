@@ -2,15 +2,12 @@ package com.learnthepath.recruitmentsystemabc.controller;
 
 import com.learnthepath.recruitmentsystemabc.dto.EnterpriseDto;
 import com.learnthepath.recruitmentsystemabc.dto.RecruitmentDto;
-import com.learnthepath.recruitmentsystemabc.exception.EntityNotFoundException;
-import com.learnthepath.recruitmentsystemabc.service.AdminService;
 import com.learnthepath.recruitmentsystemabc.service.EnterpriseService;
+import com.learnthepath.recruitmentsystemabc.service.InvoiceService;
 import com.learnthepath.recruitmentsystemabc.service.RecruitmentService;
-import com.learnthepath.recruitmentsystemabc.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,24 +17,24 @@ import java.util.List;
 @Controller
 public class AdminController {
     @Autowired
-    private AdminService adminService;
-
-    @Autowired
     private EnterpriseService enterpriseService;
 
     @Autowired
     private RecruitmentService recruitmentService;
 
+    @Autowired
+    private InvoiceService invoiceService;
+
     @GetMapping({"/admin/home", "/admin/enterprise"})
-    String showApprovalEnterprisePage(Model model) {
-        List<EnterpriseDto> notMemberEnterprises = adminService.getNonMemberEnterprises();
+    public String showApprovalEnterprisePage(Model model) {
+        List<EnterpriseDto> notMemberEnterprises = enterpriseService.getNonMemberEnterprises();
         model.addAttribute("nonMemberEnterprises", notMemberEnterprises);
         return "admin-page/admin-enterprise";
     }
 
     @GetMapping("/admin/enterprise/details")
-    String showEnterpriseDetailsPage(@RequestParam(value = "id") Integer id, Model model) {
-        EnterpriseDto enterpriseDto = Utils.mapToDto(enterpriseService.findById(id));
+    public String showEnterpriseDetailsPage(@RequestParam(value = "id") Integer id, Model model) {
+        EnterpriseDto enterpriseDto = enterpriseService.findById(id);
         if (!enterpriseDto.getStatus().equals("NON_MEMBER")) {
             return "error/404";
         }
@@ -58,15 +55,15 @@ public class AdminController {
     }
 
     @GetMapping("/admin/recruitment")
-    String showApprovalRecruitmentPage(Model model) {
-        List<RecruitmentDto> pendingApprovalRecruitment = adminService.getRecruitmentByStatus("PENDING_APPROVAL");
+    public String showApprovalRecruitmentPage(Model model) {
+        List<RecruitmentDto> pendingApprovalRecruitment = recruitmentService.getRecruitmentByStatus("PENDING_APPROVAL");
         model.addAttribute("recruitments", pendingApprovalRecruitment);
         return "admin-page/admin-recruitment";
     }
 
     @GetMapping("/admin/recruitment/details")
     String showRecruitmentDetailsPage(@RequestParam(value = "id") Integer id, Model model) {
-        RecruitmentDto recruitmentDto = Utils.mapToDto(adminService.findById(id));
+        RecruitmentDto recruitmentDto = recruitmentService.findById(id);
         if (!recruitmentDto.getStatus().equals("PENDING_APPROVAL")) {
             return "error/404";
         }
@@ -75,14 +72,15 @@ public class AdminController {
     }
 
     @PostMapping("/admin/recruitment/approve")
-    public String approveRecruitment(@RequestParam(value = "id", required = false) Integer id) {
-        recruitmentService.updateStatusById(id, "APPROVAL");
+    public String approveRecruitment(@RequestParam(value = "id", required = false) Integer recruitmentId) {
+        recruitmentService.updateStatusById(recruitmentId, "APPROVAL");
+        invoiceService.createInvoice(recruitmentId);
         return "redirect:/admin/recruitment";
     }
 
     @PostMapping("/admin/recruitment/disapprove")
-    public String disapproveRecruitment(@RequestParam(value = "id", required = false) Integer id) {
-        recruitmentService.updateStatusById(id, "DISAPPROVAL");
+    public String disapproveRecruitment(@RequestParam(value = "id", required = false) Integer recruitmentId) {
+        recruitmentService.updateStatusById(recruitmentId, "DISAPPROVAL");
         return "redirect:/admin/recruitment";
     }
 }
