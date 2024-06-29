@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Portal - Tuyển dụng ABC</title>
+    <title>Admin Portal - Tunny dụng ABC</title>
     <style>
         /* Global Styles */
         * {
@@ -273,10 +273,10 @@
 </head>
 <body>
 <header>
-    <a class="logo" th:href="@{/}">Tuyển dụng <span class="highlight">ABC</span></a>
+    <a class="logo" th:href="@{/}">Tunny dụng <span class="highlight">ABC</span></a>
     <div class="buttons">
         <a th:href="@{/logout}">
-            <button class="btn logout">Đăng xuất</button>
+            <button class="btn logout">Đăng quit</button>
         </a>
     </div>
 </header>
@@ -401,11 +401,11 @@
             <form th:action="@{/admin/recruitment}" method="get">
                 <button class="btn" type="submit">Quay lại</button>
             </form>
-            <form th:action="@{/admin/recruitment/disapprove}" method="post">
+            <form th:action="@{/admin/recruitment/disapprove}" method="post" onsubmit="return confirmDisapprove()">
                 <input type="hidden" th:name="id" th:value="*{id}">
                 <button class="btn" type="submit">Từ chối</button>
             </form>
-            <form th:action="@{/admin/recruitment/approve}" method="post">
+            <form th:action="@{/admin/recruitment/approve}" method="post" onsubmit="return confirmApprove()">
                 <input type="hidden" th:name="id" th:value="*{id}">
                 <button class="btn" type="submit">Duyệt</button>
             </form>
@@ -437,8 +437,15 @@
         document.getElementById('enterpriseTab').classList.add('active');
         document.getElementById('sub-menu').style.display = 'block'; // Ensure the sub-menu is visible
     });
+
+    function confirmDisapprove() {
+        return confirm("Bạn có chắc chắn muốn từ chối đơn này không?");
+    }
+
+    function confirmApprove() {
+        return confirm("Bạn có chắc chắn muốn duyệt đơn này không?");
+    }
     /*]]>*/
 </script>
 </body>
 </html>
-

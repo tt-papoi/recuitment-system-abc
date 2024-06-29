@@ -47,4 +47,7 @@ public class RecruitmentEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "enterprise_id", nullable = false)
     private EnterpriseEntity enterprise;
+
+    @OneToOne(mappedBy = "recruitment")
+    InvoiceEntity invoiceEntity;
 }

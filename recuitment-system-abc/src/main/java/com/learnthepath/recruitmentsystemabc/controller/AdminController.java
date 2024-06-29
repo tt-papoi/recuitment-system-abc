@@ -23,7 +23,10 @@ public class AdminController {
     private AdminService adminService;
 
     @Autowired
-    EnterpriseService enterpriseService;
+    private EnterpriseService enterpriseService;
+
+    @Autowired
+    private RecruitmentService recruitmentService;
 
     @GetMapping({"/admin/home", "/admin/enterprise"})
     String showApprovalEnterprisePage(Model model) {
@@ -44,13 +47,13 @@ public class AdminController {
 
     @PostMapping("/admin/enterprise/approve")
     public String approveEnterprise(@RequestParam(value = "id", required = false) Integer id) {
-        enterpriseService.updateStatusEnterpriseById(id, "MEMBER");
+        enterpriseService.updateStatusById(id, "MEMBER");
         return "redirect:/admin/enterprise";
     }
 
     @PostMapping("/admin/enterprise/disapprove")
     public String disapproveEnterprise(@RequestParam(value = "id", required = false) Integer id) {
-        enterpriseService.updateStatusEnterpriseById(id, "DISAPPROVAL");
+        enterpriseService.updateStatusById(id, "DISAPPROVAL");
         return "redirect:/admin/enterprise";
     }
 
@@ -71,9 +74,15 @@ public class AdminController {
         return "admin-page/admin-recruitment-details";
     }
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    public String handleEntityNotFoundException(EntityNotFoundException ex, Model model) {
-        model.addAttribute("errorMessage", ex.getMessage());
-        return "error/404"; // Assuming you have an error/404.html template
+    @PostMapping("/admin/recruitment/approve")
+    public String approveRecruitment(@RequestParam(value = "id", required = false) Integer id) {
+        recruitmentService.updateStatusById(id, "APPROVAL");
+        return "redirect:/admin/recruitment";
+    }
+
+    @PostMapping("/admin/recruitment/disapprove")
+    public String disapproveRecruitment(@RequestParam(value = "id", required = false) Integer id) {
+        recruitmentService.updateStatusById(id, "DISAPPROVAL");
+        return "redirect:/admin/recruitment";
     }
 }

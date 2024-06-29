@@ -1,8 +1,10 @@
 package com.learnthepath.recruitmentsystemabc.utils;
 
+import com.learnthepath.recruitmentsystemabc.dto.CandidateDto;
 import com.learnthepath.recruitmentsystemabc.dto.EnterpriseDto;
 import com.learnthepath.recruitmentsystemabc.dto.RecruitmentDto;
 import com.learnthepath.recruitmentsystemabc.dto.UserDto;
+import com.learnthepath.recruitmentsystemabc.entity.CandidateEntity;
 import com.learnthepath.recruitmentsystemabc.entity.EnterpriseEntity;
 import com.learnthepath.recruitmentsystemabc.entity.RecruitmentEntity;
 import com.learnthepath.recruitmentsystemabc.entity.UserEntity;
@@ -69,6 +71,23 @@ public class Utils {
         entity.setPhoneNumber(enterpriseDto.getPhoneNumber());
         entity.setTaxCode(enterpriseDto.getTaxCode());
         entity.setStatus(enterpriseDto.getStatus());
+        return entity;
+    }
+
+    public static CandidateDto mapToDto(CandidateEntity candidateEntity) {
+        CandidateDto dto = new CandidateDto();
+        dto.setBirthday(candidateEntity.getBirthday());
+        dto.setId(candidateEntity.getId());
+        dto.setEmail(candidateEntity.getEmail());
+        dto.setPhoneNumber(candidateEntity.getPhoneNumber());
+        return dto;
+    }
+    public static CandidateEntity mapToEntity(CandidateDto candidateDto) {
+        CandidateEntity entity = new CandidateEntity();
+        entity.setBirthday(candidateDto.getBirthday());
+        entity.setId(candidateDto.getId());
+        entity.setEmail(candidateDto.getEmail());
+        entity.setPhoneNumber(candidateDto.getPhoneNumber());
         return entity;
     }
 }

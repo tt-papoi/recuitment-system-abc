@@ -7,6 +7,7 @@ import com.learnthepath.recruitmentsystemabc.entity.UserEntity;
 import com.learnthepath.recruitmentsystemabc.repository.CandidateRepository;
 import com.learnthepath.recruitmentsystemabc.repository.RoleRepository;
 import com.learnthepath.recruitmentsystemabc.security.CustomUserDetails;
+import com.learnthepath.recruitmentsystemabc.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,7 +40,7 @@ public class CandidateServiceImpl implements CandidateService {
         }
 
         // Map DTO to entity
-        CandidateEntity candidateEntity = mapToCandidateEntity(candidateDto);
+        CandidateEntity candidateEntity = Utils.mapToEntity(candidateDto);
 
         // Set the user entity and synchronize the id
         candidateEntity.setUser(userEntity);
@@ -52,25 +53,5 @@ public class CandidateServiceImpl implements CandidateService {
         RoleEntity roleEntity = roleRepository.findByName("CANDIDATE");
         Set<RoleEntity> newRole = new HashSet<>(Collections.singleton(roleEntity));
         userService.updateRole(userEntity.getId(), newRole);
-    }
-
-    @Override
-    public CandidateDto mapToCandidateDto(CandidateEntity candidateEntity) {
-        CandidateDto dto = new CandidateDto();
-        dto.setBirthday(candidateEntity.getBirthday());
-        dto.setId(candidateEntity.getId());
-        dto.setEmail(candidateEntity.getEmail());
-        dto.setPhoneNumber(candidateEntity.getPhoneNumber());
-        return dto;
-    }
-
-    @Override
-    public CandidateEntity mapToCandidateEntity(CandidateDto candidateDto) {
-        CandidateEntity entity = new CandidateEntity();
-        entity.setBirthday(candidateDto.getBirthday());
-        entity.setId(candidateDto.getId());
-        entity.setEmail(candidateDto.getEmail());
-        entity.setPhoneNumber(candidateDto.getPhoneNumber());
-        return entity;
     }
 }

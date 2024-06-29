@@ -4,6 +4,7 @@ import com.learnthepath.recruitmentsystemabc.dto.EnterpriseDto;
 import com.learnthepath.recruitmentsystemabc.dto.RecruitmentDto;
 import com.learnthepath.recruitmentsystemabc.entity.EnterpriseEntity;
 import com.learnthepath.recruitmentsystemabc.entity.RecruitmentEntity;
+import com.learnthepath.recruitmentsystemabc.repository.EnterpriseRepository;
 import com.learnthepath.recruitmentsystemabc.repository.RecruitmentRepository;
 import com.learnthepath.recruitmentsystemabc.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,16 +16,17 @@ import java.util.List;
 @Service
 public class AdminServiceImpl implements AdminService {
     @Autowired
-    private EnterpriseService enterpriseService;
+    private EnterpriseRepository enterpriseRepository;
 
     @Autowired
     private RecruitmentRepository recruitmentRepository;
 
     @Override
     public List<EnterpriseDto> getNonMemberEnterprises() {
-        List<EnterpriseEntity> enterpriseEntities = enterpriseService.getNonMemberEnterprises();
+        String status = "NON_MEMBER";
+        List<EnterpriseEntity> nonMemberEnterprises = enterpriseRepository.findByStatus(status);
         List<EnterpriseDto> enterpriseDtos = new ArrayList<>();
-        for (EnterpriseEntity entity : enterpriseEntities) {
+        for (EnterpriseEntity entity : nonMemberEnterprises) {
             enterpriseDtos.add(Utils.mapToDto(entity));
         }
         return enterpriseDtos;

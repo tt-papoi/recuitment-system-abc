@@ -11,9 +11,7 @@ import java.util.List;
 public interface EnterpriseService {
     void saveEnterprise(EnterpriseDto enterpriseDto);
 
-    List<EnterpriseEntity> getNonMemberEnterprises();
-
-    void updateStatusEnterpriseById(Integer id, String status);
+    void updateStatusById(Integer id, String status);
 
     EnterpriseEntity findById(Integer id);
 

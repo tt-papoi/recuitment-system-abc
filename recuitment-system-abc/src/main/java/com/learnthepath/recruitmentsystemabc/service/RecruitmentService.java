@@ -8,4 +8,5 @@ import org.springframework.stereotype.Service;
 public interface RecruitmentService {
     void saveRecruitment(RecruitmentEntity recruitmentEntity);
     RecruitmentEntity findById(Integer id);
+    void updateStatusById(Integer id, String status);
 }

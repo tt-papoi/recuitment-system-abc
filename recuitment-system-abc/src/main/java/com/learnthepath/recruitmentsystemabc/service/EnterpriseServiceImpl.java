@@ -8,6 +8,7 @@ import com.learnthepath.recruitmentsystemabc.entity.RoleEntity;
 import com.learnthepath.recruitmentsystemabc.entity.UserEntity;
 import com.learnthepath.recruitmentsystemabc.exception.EntityNotFoundException;
 import com.learnthepath.recruitmentsystemabc.repository.EnterpriseRepository;
+import com.learnthepath.recruitmentsystemabc.repository.InvoiceRepository;
 import com.learnthepath.recruitmentsystemabc.repository.RecruitmentRepository;
 import com.learnthepath.recruitmentsystemabc.repository.RoleRepository;
 import com.learnthepath.recruitmentsystemabc.security.CustomUserDetails;
@@ -30,13 +31,13 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     private RoleRepository roleRepository;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private RecruitmentRepository recruitmentRepository;
 
     @Autowired
-    private RecruitmentService recruitmentService;
+    private InvoiceRepository
+
+    @Autowired
+    private UserService userService;
 
     @Override
     @Transactional
@@ -67,12 +68,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public List<EnterpriseEntity> getNonMemberEnterprises() {
-        return enterpriseRepository.findByStatus("NON_MEMBER");
-    }
-
-    @Override
-    public void updateStatusEnterpriseById(Integer id, String status) {
+    public void updateStatusById(Integer id, String status) {
         EnterpriseEntity enterprise = enterpriseRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Cannot find enterprise with id: " + id));
 
@@ -114,6 +110,6 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         EnterpriseEntity enterpriseEntity = findById(userService.getCurrentUserId());
         RecruitmentEntity recruitmentEntity = Utils.mapToEntity(recruitmentDto);
         recruitmentEntity.setEnterprise(enterpriseEntity);
-        recruitmentService.saveRecruitment(recruitmentEntity);
+        recruitmentRepository.save(recruitmentEntity);
     }
 }
