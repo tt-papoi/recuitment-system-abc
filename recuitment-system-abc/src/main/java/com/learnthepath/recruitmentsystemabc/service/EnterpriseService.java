@@ -16,7 +16,5 @@ public interface EnterpriseService {
 
     EnterpriseDto getCurrentEnterprise();
 
-    List<RecruitmentDto> findPendingApprovalRecruitment();
-
     List<EnterpriseDto> getNonMemberEnterprises();
 }

@@ -13,4 +13,5 @@ public interface InvoiceService {
     void createInvoice(Integer recruitmentId);
     Double calculatePriceBasedOnTime(LocalDate startDate, LocalDate endDate);
     double findPriceByTimeUnit(String timeUnit);
+    void payInvoice(Integer invoiceId, String method);
 }

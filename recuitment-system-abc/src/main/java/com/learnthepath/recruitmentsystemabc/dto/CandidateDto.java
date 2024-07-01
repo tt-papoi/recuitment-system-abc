@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -26,5 +27,5 @@ public class CandidateDto {
     private String email;
 
     @NotNull(message = "Date of birth cannot be blank")
-    private Date birthday;
+    private LocalDate birthday;
 }

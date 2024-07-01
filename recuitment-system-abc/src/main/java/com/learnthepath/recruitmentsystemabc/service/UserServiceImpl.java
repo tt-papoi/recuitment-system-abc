@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
         } else if (roles.contains("ENTERPRISE")) {
             return "/enterprise/home";
         } else if (roles.contains("CANDIDATE")) {
-            return "/candidate/home";
+            return "/candidate/jobs";
         } else if (roles.contains("NONE")) {
             return "/register-member/home";
         } else {

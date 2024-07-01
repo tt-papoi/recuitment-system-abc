@@ -86,19 +86,6 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
 
     @Override
-    public List<RecruitmentDto> findPendingApprovalRecruitment() {
-        Integer id = userService.getCurrentUserId();
-        String status = "PENDING_APPROVAL";
-        List<RecruitmentEntity> entities = recruitmentRepository.findByEnterpriseIdAndStatus(id, status);
-        List<RecruitmentDto> dtos = new ArrayList<>();
-        for(RecruitmentEntity entity : entities) {
-            dtos.add(Utils.mapToDto(entity));
-        }
-
-        return dtos;
-    }
-
-    @Override
     public List<EnterpriseDto> getNonMemberEnterprises() {
         String status = "NON_MEMBER";
         List<EnterpriseEntity> nonMemberEnterprises = enterpriseRepository.findByStatus(status);

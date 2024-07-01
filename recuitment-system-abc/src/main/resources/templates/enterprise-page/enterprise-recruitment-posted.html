@@ -290,7 +290,7 @@
                     <div class="sub-menu" id="paymentSubMenu" th:if="*{status} == 'MEMBER'">
                         <ul>
                             <li><a th:href="@{/enterprise/recruitment/pending-paid}" id="pendingPaidTab">Chờ thanh toán</a></li>
-                            <li><a th:href="@{#}" id="invoiceTab">Hoá đơn</a></li>
+                            <li><a th:href="@{/enterprise/invoice}" id="invoiceTab">Hoá đơn</a></li>
                         </ul>
                     </div>
                 </li>
@@ -303,7 +303,7 @@
     <div class="content">
         <div th:if="*{status} == 'MEMBER'" class="create-job">
             <div class="job-title">
-                <p>Tin chờ thanh toán</p>
+                <p>Tin đã đăng tuyển</p>
             </div>
             <form th:action="@{/enterprise/recruitment/create}" method="get" class="job-button">
                 <button type="submit">Tạo tin tuyển dụng</button>
@@ -320,19 +320,19 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="invoice, index : ${invoices}">
-                <td th:text="${invoice.recruitment.appliedPosition}"></td>
-                <td th:text="${#temporals.format(invoice.recruitment.startDate, 'dd-MM-yyyy')}"></td>
-                <td th:text="${#temporals.format(invoice.recruitment.endDate, 'dd-MM-yyyy')}"></td>
-                <td th:text="${invoice.recruitment.numberCandidates}"></td>
-                <td><a th:href="@{/enterprise/recruitment/pending-paid/details(id=${invoice.id})}">Thanh toán</a></td>
+            <tr th:each="recruitment, index : ${pendingApprovalRecruitment}">
+                <td th:text="${recruitment.appliedPosition}"></td>
+                <td th:text="${#temporals.format(recruitment.startDate, 'dd-MM-yyyy')}"></td>
+                <td th:text="${#temporals.format(recruitment.endDate, 'dd-MM-yyyy')}"></td>
+                <td th:text="${recruitment.numberCandidates}"></td>
+                <td><a th:href="@{#(id=${recruitment.id})}">Chi tiết</a></td>
             </tr>
             </tbody>
         </table>
         <div th:if="*{status} == 'NON_MEMBER'" class="member-alert">
             <strong th:text="'Đang chờ xác nhận đăng ký thành viên'"></strong>
         </div>
-        <div th:if="*{status} == 'DISAPPROVAL'" class="member-alert">
+        <div th:if="*{status} == 'REJECTION'" class="member-alert">
             <strong th:text="'Yêu cầu đăng ký thành viên bị từ chối'"></strong>
             <strong th:text="'Vui lòng cập nhật thông tin chính xác'"></strong>
         </div>
@@ -371,8 +371,8 @@
 
     // Set "Đã đăng tuyển" tab active on page load
     window.addEventListener('load', () => {
-        document.getElementById('pendingPaidTab').classList.add('active');
-        document.getElementById('paymentSubMenu').style.display = 'block'; // Ensure the sub-menu is visible
+        document.getElementById('postedTab').classList.add('active');
+        document.getElementById('recruitmentSubMenu').style.display = 'block'; // Ensure the sub-menu is visible
     });
     /*]]>*/
 </script>

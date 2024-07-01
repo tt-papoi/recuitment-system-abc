@@ -58,10 +58,15 @@ public class RegisterMemberController {
     }
 
     @PostMapping("/register-member/candidate/submit")
-    public String handleEnterpriseRegistration(@Valid CandidateDto candidateDto, BindingResult result) {
-        if (result.hasErrors()) {
-            return "register-page/register-candidate";
-        }
+    public String handleEnterpriseRegistration(
+            @Valid CandidateDto candidateDto,
+            BindingResult result, Model model) {
+
+//        if (result.hasErrors()) {
+//            model.addAttribute("candidate", candidateDto);
+//            return "register-page/register-candidate";
+//        }
+
         candidateService.saveCandidate(candidateDto);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken)) {

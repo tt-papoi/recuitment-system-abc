@@ -1,5 +1,6 @@
 package com.learnthepath.recruitmentsystemabc.dto;
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -31,6 +32,8 @@ public class RecruitmentDto {
     private Integer numberCandidates;
 
     private String status;
+
+    private String disapprovalReason;
 
     @NotNull(message = "Start date position cannot be blank")
     @Future(message = "Date must be in the future")

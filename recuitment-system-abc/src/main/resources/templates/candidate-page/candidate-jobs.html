@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Portal - Tuyển dụng ABC</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 150px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            color: inherit;
+            text-decoration: inherit;
+        }
+
+        .logo .highlight {
+            color: #006F18;
+            text-decoration: inherit;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .buttons .btn {
+            font-size: 16px;
+            padding: 10px 20px;
+            border: 2px solid #006F18;
+            background-color: white;
+            color: #006F18;
+            cursor: pointer;
+            border-radius: 5px;
+            white-space: nowrap;
+            text-decoration: none;
+        }
+
+        .buttons .btn.logout {
+            background-color: #006F18;
+            color: white;
+        }
+
+        .main-content {
+            display: flex;
+            margin-top: 10px;
+            padding: 20px;
+            width: 80%;
+        }
+
+        .sidebar {
+            width: 200px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-right: 20px;
+        }
+
+        .sidebar .menu {
+            padding: 10px 0;
+        }
+
+        .sidebar .menu h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #303030;
+            text-align: center;
+        }
+
+        .sidebar .menu ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar .menu ul li {
+            margin-bottom: 5px;
+            margin-top: 5px;
+        }
+
+        .sidebar .menu ul li a {
+            text-decoration: none;
+            color: #006F18;
+            font-size: 16px;
+            display: block;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar .menu ul li a:hover {
+            background-color: #f0f0f0;
+        }
+
+        .sidebar .menu ul li a.active {
+            background-color: #006F18;
+            color: white;
+        }
+
+        .sidebar .sub-menu {
+            padding-left: 20px;
+            display: none;
+        }
+
+        .search-job {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 20px;
+            position: relative; /* Required for suggestions positioning */
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-right: 10px;
+            font-size: 16px;
+            outline: none; /* Remove default outline */
+        }
+
+        .search-btn {
+            font-size: 16px;
+            padding: 10px 20px;
+            border: 2px solid #006F18;
+            background-color: #006F18;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .search-btn:hover {
+            background-color: #005F14;
+        }
+
+        .suggestions {
+            position: absolute;
+            top: calc(100% + 5px);
+            left: 0;
+            right: 0;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            max-height: 150px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none; /* Initially hide suggestions */
+        }
+
+        .suggestion-item {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .suggestion-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .no-results {
+            padding: 10px;
+            color: #999;
+        }
+
+        footer {
+            width: 100%;
+            background-color: #006F18;
+            padding: 20px 0;
+            text-align: center;
+            color: white;
+            margin-top: auto;
+        }
+
+        .content {
+            flex: 1;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center; /* Center the content horizontally */
+            text-align: center;
+            width: 100%; /* Ensure content takes full width of parent */
+        }
+
+        .job-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: flex-start; /* Align job items to the left */
+            width: 100%; /* Ensure job grid takes full width of content */
+            margin: 0 auto; /* Center the entire grid */
+        }
+
+        .job-item {
+            display: flex;
+            align-items: center;
+            flex: 1 1 300px; /* Adjust the width as per your content */
+            padding: 20px;
+            text-align: left;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+            cursor: pointer;
+            color: black;
+            height: 100px;
+            line-height: 1.5;
+            position: relative;
+            border-radius: 5px;
+            background: #ededed;
+        }
+
+        .job-item:hover {
+            background-color: #119e30;
+            color: #ffffff;
+            transform: scale(1.02);
+        }
+
+        .job-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            margin-right: 20px;
+        }
+
+        .fix-align {
+            flex: 1 1 300px; /* Adjust the width as per your content */
+            padding: 20px;
+            background-color: #fff;
+            height: 100px;
+        }
+
+        .pagination {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .pagination ul {
+            list-style-type: none;
+            padding: 0;
+            display: inline-block;
+            border-radius: 5px;
+            overflow: hidden;
+            background-color: #ededed;
+        }
+
+        .pagination li {
+            float: left;
+        }
+
+        .pagination li a,
+        .pagination li span {
+            color: #006F18;
+            display: block;
+            padding: 10px 20px;
+            text-decoration: none;
+        }
+
+        .pagination li a:hover {
+            background-color: #119e30;
+            color: #ffffff;
+        }
+
+        .pagination li.active a {
+            background-color: #006F18;
+            color: white;
+        }
+
+        .pagination li.disabled {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        @media (max-width: 768px) {
+            /* Responsive adjustments */
+            header {
+                padding: 15px 20px;
+            }
+
+            .main-content {
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+            }
+
+            .sidebar {
+                width: 100%;
+                margin: 0;
+                margin-bottom: 20px;
+            }
+
+            .content {
+                width: 100%;
+                padding: 10px;
+                overflow-x: auto; /* Scroll horizontally if table overflows */
+            }
+
+            .content table {
+                width: 100%;
+                table-layout: fixed;
+            }
+
+            .content table th,
+            .content table td {
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <a class="logo" th:href="@{/}">Tuyển dụng <span class="highlight">ABC</span></a>
+    <div class="buttons">
+        <a th:href="@{/logout}">
+            <button class="btn logout">Đăng xuất</button>
+        </a>
+    </div>
+</header>
+<main class="main-content">
+    <div class="sidebar">
+        <div class="menu">
+            <ul>
+                <li><a href="#" onclick="toggleSubMenu(event, 'jobsSubMenu')">Việc làm</a>
+                    <div class="sub-menu" id="jobsSubMenu">
+                        <ul>
+                            <li><a th:href="@{/candidate/jobs/find}" id="findJobTab">Tìm kiếm</a></li>
+                            <li><a th:href="@{/candidate/jobs/applied}" id="appliedJobTab">Đã ứng tuyển</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li><a href="#">Công ty</a></li>
+                <li><a href="#">Thông báo</a></li>
+                <li><a href="#">Tài khoản</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="content">
+        <form class="search-job" th:action="@{/candidate/jobs}" method="get">
+            <input type="text" name="keyword"
+                   placeholder="Nhập từ khóa tìm kiếm..."
+                   class="search-input"
+                   th:value="${keyword}">
+            <button type="submit" class="btn search-btn">Tìm kiếm</button>
+        </form>
+        <div id="searchResults">
+            <div class="job-grid">
+                <div th:each="job : ${jobs}" class="job-item">
+                    <img th:src="@{/images/enterprise_icon.png}" alt="Nhà tuyển dụng">
+                    <div>
+                        <p th:text="${job.appliedPosition}" style="font-weight: bold;"></p>
+                        <p th:text="${job.enterprise.name}"></p>
+                    </div>
+                </div>
+                <div th:if="${#lists.size(jobs) % 2 == 1}" class="fix-align">
+                    <p></p>
+                    <p></p>
+                </div>
+            </div>
+            <div class="pagination">
+                <ul>
+                    <li th:if="${currentPage > 0}">
+                        <a th:href="@{/candidate/jobs(page=0)}" th:text="'&#xab;'"></a>
+                    </li>
+                    <li th:if="${currentPage > 0}">
+                        <a th:href="@{/candidate/jobs(page=${currentPage - 1})}" th:text="'&#x2039;'"></a>
+                    </li>
+                    <li>
+                        <span th:text="|${currentPage + 1} / ${totalPages} trang|"></span>
+                    </li>
+                    <li th:if="${currentPage < totalPages - 1}">
+                        <a th:href="@{/candidate/jobs(page=${currentPage + 1})}" th:text="'&#x203A;'"></a>
+                    </li>
+                    <li th:if="${currentPage < totalPages - 1}">
+                        <a th:href="@{/candidate/jobs(page=${totalPages - 1})}" th:text="'&#xbb;'"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</main>
+<footer>
+    <p>© 2024 Tuyển dụng ABC. All rights reserved.</p>
+</footer>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    function showSuggestions(query) {
+        const searchInput = document.querySelector('.search-input');
+        const suggestions = document.getElementById('suggestions');
+        const searchResults = document.getElementById('searchResults');
+
+        suggestions.style.width = searchInput.offsetWidth + 'px';
+
+        if (query.length === 0) {
+            suggestions.innerHTML = '';
+            suggestions.style.display = 'none';
+            return;
+        }
+
+        // Mock data for suggestions
+        const suggestionData = ['Developer', 'Designer', 'Project Manager', 'Product Manager', 'Marketing Specialist'];
+        const filteredSuggestions = suggestionData.filter(item => item.toLowerCase().includes(query.toLowerCase()));
+
+        if (filteredSuggestions.length === 0) {
+            suggestions.innerHTML = '<div class="no-results">Không có kết quả</div>';
+            suggestions.style.display = 'block';
+        } else {
+            suggestions.innerHTML = '';
+            filteredSuggestions.forEach(item => {
+                const suggestionItem = document.createElement('div');
+                suggestionItem.classList.add('suggestion-item');
+                suggestionItem.textContent = item;
+                suggestionItem.onclick = function() {
+                    document.querySelector('.search-input').value = item;
+                    suggestions.style.display = 'none';
+                };
+                suggestions.appendChild(suggestionItem);
+            });
+            suggestions.style.display = 'block';
+        }
+    }
+
+    function toggleSuggestions(show) {
+        const suggestions = document.getElementById('suggestions');
+        const searchInput = document.querySelector('.search-input');
+        if (show) {
+            suggestions.style.display = 'block';
+        } else {
+            suggestions.style.display = 'none';
+        }
+    }
+
+    function toggleSubMenu(event, subMenuId) {
+        const subMenu = document.getElementById(subMenuId);
+        const approvalTab = event.target.closest('li');
+
+        // Toggle visibility of sub-menu
+        if (subMenu.style.display === 'block') {
+            subMenu.style.display = 'none';
+            approvalTab.classList.remove('active'); // Remove active class when hiding sub-menu
+        } else {
+            subMenu.style.display = 'block';
+            approvalTab.classList.add('active'); // Add active class when showing sub-menu
+        }
+    }
+
+    // Add events for sidebar
+    const menuItems = document.querySelectorAll('.sidebar .menu ul li a');
+    menuItems.forEach(item => {
+        item.addEventListener('click', function() {
+            // Remove the previously active class of all links
+            menuItems.forEach(link => link.classList.remove('active'));
+            // To add the active class to the clicked link
+            this.classList.add('active');
+        });
+    });
+
+    // Event listener for clicks on the document
+
+    document.addEventListener('click', function(event) {
+        const searchJobContainer = document.querySelector('.search-job');
+        const suggestions = document.getElementById('suggestions');
+
+        // Check if the click is outside the search job container and suggestions
+        if (!searchJobContainer.contains(event.target)) {
+            toggleSuggestions(false); // Hide suggestions
+        } else {
+            toggleSuggestions(true); // Show suggestions when clicking inside the search job container
+        }
+    });
+
+    window.addEventListener('load', () => {
+        document.getElementById('findJobTab').classList.add('active');
+        document.getElementById('jobsSubMenu').style.display = 'block'; // Ensure the sub-menu is visible
+    });
+
+    /*]]>*/
+</script>
+</body>
+</html>

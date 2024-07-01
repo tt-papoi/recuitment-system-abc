@@ -40,6 +40,9 @@ public class RecruitmentEntity {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDate;
 
+    @Column(name = "disapproval_reason")
+    private String disapprovalReason;
+
     @Column(name = "end_date", nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;

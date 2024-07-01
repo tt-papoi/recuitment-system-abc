@@ -97,4 +97,15 @@ public class InvoiceServiceImpl implements InvoiceService{
         }
         return price;
     }
+
+    @Override
+    public void payInvoice(Integer invoiceId, String method) {
+        InvoiceEntity invoice = invoiceRepository.findById(invoiceId)
+                .orElseThrow(() -> new EntityNotFoundException("Cannot find invoice with id: " + invoiceId));
+        invoice.setStatus("PAID");
+        invoice.setMethod(method);
+        LocalDate currentDate = LocalDate.now();
+        invoice.setPaymentDate(currentDate);
+        invoiceRepository.save(invoice);
+    }
 }

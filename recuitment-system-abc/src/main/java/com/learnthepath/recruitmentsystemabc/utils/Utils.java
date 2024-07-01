@@ -25,6 +25,8 @@ public class Utils {
         entity.setStartDate(dto.getStartDate());
         entity.setStatus(dto.getStatus());
         entity.setNumberCandidates(dto.getNumberCandidates());
+        entity.setDisapprovalReason(dto.getDisapprovalReason());
+        entity.setEnterprise(Utils.mapToEntity(dto.getEnterprise()));
         return entity;
     }
 
@@ -39,6 +41,7 @@ public class Utils {
         dto.setStatus(entity.getStatus());
         dto.setNumberCandidates(entity.getNumberCandidates());
         dto.setEnterprise(mapToDto(entity.getEnterprise()));
+        dto.setDisapprovalReason(entity.getDisapprovalReason());
         return dto;
     }
 
@@ -74,6 +77,7 @@ public class Utils {
         dto.setId(candidateEntity.getId());
         dto.setEmail(candidateEntity.getEmail());
         dto.setPhoneNumber(candidateEntity.getPhoneNumber());
+        dto.setName(candidateEntity.getName());
         return dto;
     }
     public static CandidateEntity mapToEntity(CandidateDto candidateDto) {
@@ -82,6 +86,7 @@ public class Utils {
         entity.setId(candidateDto.getId());
         entity.setEmail(candidateDto.getEmail());
         entity.setPhoneNumber(candidateDto.getPhoneNumber());
+        entity.setName(candidateDto.getName());
         return entity;
     }
 

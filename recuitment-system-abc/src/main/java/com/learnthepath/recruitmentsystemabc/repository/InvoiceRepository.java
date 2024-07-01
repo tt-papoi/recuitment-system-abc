@@ -20,4 +20,9 @@ public interface InvoiceRepository extends JpaRepository<InvoiceEntity, Integer>
             "WHERE i.recruitment.enterprise.id = :enterpriseId " +
             "AND i.status = :status")
     List<InvoiceEntity> findByEnterpriseIdAndStatus(Integer enterpriseId, String status);
+
+    @Query("SELECT i FROM InvoiceEntity i " +
+            "WHERE i.status = :invoiceStatus " +
+            "AND i.recruitment.status = :recruitmentStatus")
+    List<InvoiceEntity> findByStatusAndRecruitmentStatus(String invoiceStatus, String recruitmentStatus);
 }

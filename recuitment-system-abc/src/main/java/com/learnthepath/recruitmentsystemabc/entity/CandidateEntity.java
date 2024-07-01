@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "candidates")
@@ -28,7 +28,7 @@ public class CandidateEntity {
     private String email;
 
     @Column(name = "birthday", nullable = false)
-    Date birthday;
+    private LocalDate birthday;
 
     @OneToOne
     @MapsId

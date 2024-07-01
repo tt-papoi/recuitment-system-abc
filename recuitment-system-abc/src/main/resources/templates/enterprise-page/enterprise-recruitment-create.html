@@ -181,7 +181,7 @@
 
         .content .input-group {
             width: 100%;
-            width: 500px;
+            width: 600px;
             margin-bottom: 15px;
             background-color: white;
             border-radius: 8px;
@@ -272,6 +272,11 @@
                 padding: 10px;
                 overflow-x: auto;
             }
+
+            .content .input-group {
+                width: 100%;
+                width: 400px;
+            }
         }
     </style>
 </head>
@@ -301,7 +306,7 @@
                     <div class="sub-menu" id="paymentSubMenu" th:if="*{status} == 'MEMBER'">
                         <ul>
                             <li><a th:href="@{/enterprise/recruitment/pending-paid}" id="pendingPaidTab">Chờ thanh toán</a></li>
-                            <li><a th:href="@{#}" id="invoiceTab">Hoá đơn</a></li>
+                            <li><a th:href="@{/enterprise/invoice}" id="invoiceTab">Hoá đơn</a></li>
                         </ul>
                     </div>
                 </li>
@@ -314,7 +319,7 @@
     <div class="content">
         <div th:if="*{status} == 'MEMBER'" class="create-job">
             <div class="job-title">
-                <p>Tạo tin tuyển dụng</p>
+                <p th:text="${title}"></p>
             </div>
             <form th:action="@{/enterprise/recruitment/create}" method="get" class="job-button">
                 <button type="submit">Tạo tin tuyển dụng</button>
@@ -322,8 +327,9 @@
         </div>
         <form th:action="@{/enterprise/recruitment/create/submit}" method="post" class="job-form" th:object="${recruitment}">
             <div class="input-group">
+                <input type="hidden" th:field="*{id}">
                 <label for="position">Vị trí tuyển dụng:</label>
-                <input type="text" id="position" name="position" th:field="*{appliedPosition}" required>
+                <input type="text" id="position" name="position" th:field="*{appliedPosition}"  required>
             </div>
             <div class="input-group">
                 <label for="quantity">Số lượng ứng viên:</label>

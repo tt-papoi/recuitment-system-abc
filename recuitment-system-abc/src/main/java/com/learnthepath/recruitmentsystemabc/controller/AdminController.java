@@ -2,6 +2,7 @@ package com.learnthepath.recruitmentsystemabc.controller;
 
 import com.learnthepath.recruitmentsystemabc.dto.EnterpriseDto;
 import com.learnthepath.recruitmentsystemabc.dto.RecruitmentDto;
+import com.learnthepath.recruitmentsystemabc.service.AdminService;
 import com.learnthepath.recruitmentsystemabc.service.EnterpriseService;
 import com.learnthepath.recruitmentsystemabc.service.InvoiceService;
 import com.learnthepath.recruitmentsystemabc.service.RecruitmentService;
@@ -24,6 +25,9 @@ public class AdminController {
 
     @Autowired
     private InvoiceService invoiceService;
+
+    @Autowired
+    private AdminService adminService;
 
     @GetMapping({"/admin/home", "/admin/enterprise"})
     public String showApprovalEnterprisePage(Model model) {
@@ -56,7 +60,7 @@ public class AdminController {
 
     @GetMapping("/admin/recruitment")
     public String showApprovalRecruitmentPage(Model model) {
-        List<RecruitmentDto> pendingApprovalRecruitment = recruitmentService.getRecruitmentByStatus("PENDING_APPROVAL");
+        List<RecruitmentDto> pendingApprovalRecruitment = adminService.findRecruitmentByStatus("PENDING_APPROVAL");
         model.addAttribute("recruitments", pendingApprovalRecruitment);
         return "admin-page/admin-recruitment";
     }
@@ -72,15 +76,17 @@ public class AdminController {
     }
 
     @PostMapping("/admin/recruitment/approve")
-    public String approveRecruitment(@RequestParam(value = "id", required = false) Integer recruitmentId) {
-        recruitmentService.updateStatusById(recruitmentId, "APPROVAL");
-        invoiceService.createInvoice(recruitmentId);
+    public String approveRecruitment(RecruitmentDto recruitmentDto) {
+        recruitmentService.updateStatusById(recruitmentDto.getId(), "APPROVAL");
+        invoiceService.createInvoice(recruitmentDto.getId());
         return "redirect:/admin/recruitment";
     }
 
     @PostMapping("/admin/recruitment/disapprove")
-    public String disapproveRecruitment(@RequestParam(value = "id", required = false) Integer recruitmentId) {
+    public String disapproveRecruitment(RecruitmentDto recruitmentDto) {
+        Integer recruitmentId = recruitmentDto.getId();
         recruitmentService.updateStatusById(recruitmentId, "DISAPPROVAL");
+        recruitmentService.updateDisapprovalReasonById(recruitmentId, recruitmentDto.getDisapprovalReason());
         return "redirect:/admin/recruitment";
     }
 }
