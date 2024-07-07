@@ -3,14 +3,19 @@ package com.learnthepath.recruitmentsystemabc.service;
 import com.learnthepath.recruitmentsystemabc.dto.RecruitmentDto;
 import com.learnthepath.recruitmentsystemabc.entity.EnterpriseEntity;
 import com.learnthepath.recruitmentsystemabc.entity.RecruitmentEntity;
+import com.learnthepath.recruitmentsystemabc.entity.ResumeEntity;
 import com.learnthepath.recruitmentsystemabc.exception.EntityNotFoundException;
 import com.learnthepath.recruitmentsystemabc.repository.EnterpriseRepository;
 import com.learnthepath.recruitmentsystemabc.repository.RecruitmentRepository;
+import com.learnthepath.recruitmentsystemabc.repository.ResumeRepository;
+import com.learnthepath.recruitmentsystemabc.security.CustomUserDetails;
 import com.learnthepath.recruitmentsystemabc.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,6 +32,9 @@ public class RecruitmentServiceImpl implements RecruitmentService {
 
     @Autowired
     private EnterpriseRepository enterpriseRepository;
+
+    @Autowired
+    private ResumeRepository resumeRepository;
 
     @Override
     public void saveRecruitment(RecruitmentEntity recruitmentEntity) {
@@ -59,6 +67,16 @@ public class RecruitmentServiceImpl implements RecruitmentService {
                 .collect(Collectors.toList());
 
         return new PageImpl<>(dtos, pageable, entities.getTotalElements());
+    }
+
+    @Override
+    public boolean hasAppliedForJob(Integer recruitmentId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        List<ResumeEntity> resumes = resumeRepository.findByRecruitmentIdAndCandidateId(recruitmentId, userDetails.getId());
+
+        return !resumes.isEmpty();
     }
 
     @Override

@@ -27,6 +27,10 @@ public class Utils {
         entity.setNumberCandidates(dto.getNumberCandidates());
         entity.setDisapprovalReason(dto.getDisapprovalReason());
         entity.setEnterprise(Utils.mapToEntity(dto.getEnterprise()));
+        entity.setBenefits(dto.getBenefits());
+        entity.setWorkExperience(dto.getWorkExperience());
+        entity.setSalary(dto.getSalary());
+        entity.setWorkLocation(dto.getWorkLocation());
         return entity;
     }
 
@@ -42,6 +46,10 @@ public class Utils {
         dto.setNumberCandidates(entity.getNumberCandidates());
         dto.setEnterprise(mapToDto(entity.getEnterprise()));
         dto.setDisapprovalReason(entity.getDisapprovalReason());
+        dto.setSalary(entity.getSalary());
+        dto.setBenefits(entity.getBenefits());
+        dto.setWorkExperience(entity.getWorkExperience());
+        dto.setWorkLocation(entity.getWorkLocation());
         return dto;
     }
 
@@ -111,4 +119,25 @@ public class Utils {
         entity.setRecruitment(mapToEntity(dto.getRecruitment()));
         return entity;
     }
+
+    public static ResumeDto mapToDto(ResumeEntity entity) {
+        ResumeDto dto = new ResumeDto();
+        dto.setId(entity.getId());
+        dto.setContent(entity.getContent());
+        dto.setCandidate(mapToDto(entity.getCandidate()));
+        dto.setRecruitment(mapToDto(entity.getRecruitment()));
+        dto.setStatus(entity.getStatus());
+        return dto;
+    }
+
+    public static ResumeEntity mapToDto(ResumeDto dto) {
+        ResumeEntity entity = new ResumeEntity();
+        entity.setId(dto.getId());
+        entity.setContent(dto.getContent());
+        entity.setCandidate(mapToEntity(dto.getCandidate()));
+        entity.setRecruitment(mapToEntity(dto.getRecruitment()));
+        entity.setStatus(dto.getStatus());
+        return entity;
+    }
+
 }

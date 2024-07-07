@@ -425,6 +425,30 @@
                 </div>
                 <div class="vertical-table-row">
                     <div class="vertical-table-cell">
+                        <strong>Kinh nghiệm</strong>
+                    </div>
+                    <div class="vertical-table-cell">
+                        <span th:text="*{workExperience}"></span>
+                    </div>
+                </div>
+                <div class="vertical-table-row">
+                    <div class="vertical-table-cell">
+                        <strong>Mức lương</strong>
+                    </div>
+                    <div class="vertical-table-cell">
+                        <span th:text="*{salary}"></span>
+                    </div>
+                </div>
+                <div class="vertical-table-row">
+                    <div class="vertical-table-cell">
+                        <strong>Địa điểm làm việc</strong>
+                    </div>
+                    <div class="vertical-table-cell">
+                        <span class="formatted-text" th:text="*{workLocation}"></span>
+                    </div>
+                </div>
+                <div class="vertical-table-row">
+                    <div class="vertical-table-cell">
                         <strong>Số lượng ứng viên</strong>
                     </div>
                     <div class="vertical-table-cell">
@@ -436,7 +460,7 @@
                         <strong>Ngày bắt đầu</strong>
                     </div>
                     <div class="vertical-table-cell">
-                        <span th:text="*{startDate}"></span>
+                        <span th:text="*{#temporals.format(startDate,'dd-MM-yyyy')}"></span>
                     </div>
                 </div>
                 <div class="vertical-table-row">
@@ -444,7 +468,7 @@
                         <strong>Ngày kết thúc</strong>
                     </div>
                     <div class="vertical-table-cell">
-                        <span th:text="*{endDate}"></span>
+                        <span  th:text="*{#temporals.format(endDate,'dd-MM-yyyy')}"></span>
                     </div>
                 </div>
                 <div class="vertical-table-row">
@@ -461,6 +485,14 @@
                     </div>
                     <div class="vertical-table-cell">
                         <span class="formatted-text" th:text="*{requirements}"></span>
+                    </div>
+                </div>
+                <div class="vertical-table-row">
+                    <div class="vertical-table-cell">
+                        <strong>Quyền lợi</strong>
+                    </div>
+                    <div class="vertical-table-cell">
+                        <span class="formatted-text" th:text="*{benefits}"></span>
                     </div>
                 </div>
             </div>

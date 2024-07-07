@@ -2,6 +2,7 @@ package com.learnthepath.recruitmentsystemabc.service;
 
 import com.learnthepath.recruitmentsystemabc.dto.RecruitmentDto;
 import com.learnthepath.recruitmentsystemabc.entity.RecruitmentEntity;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,4 +31,6 @@ public interface RecruitmentService {
     Page<RecruitmentDto> findAll(Pageable pageable);
 
     Page<RecruitmentDto> searchJobs(String keyword, Pageable pageable);
+
+    boolean hasAppliedForJob(Integer recruitmentId);
 }

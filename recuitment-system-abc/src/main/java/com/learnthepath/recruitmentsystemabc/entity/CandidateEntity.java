@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "candidates")
@@ -34,4 +36,7 @@ public class CandidateEntity {
     @MapsId
     @JoinColumn(name = "id")
     private UserEntity user;
+
+    @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ResumeEntity> resumes = new HashSet<>();
 }

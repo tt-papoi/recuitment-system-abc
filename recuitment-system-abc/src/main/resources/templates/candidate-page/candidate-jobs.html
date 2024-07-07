@@ -239,12 +239,13 @@
             position: relative;
             border-radius: 5px;
             background: #ededed;
+            text-decoration: none;
         }
 
         .job-item:hover {
             background-color: #119e30;
             color: #ffffff;
-            transform: scale(1.02);
+            transform: scale(1.01);
         }
 
         .job-item img {
@@ -377,13 +378,13 @@
         </form>
         <div id="searchResults">
             <div class="job-grid">
-                <div th:each="job : ${jobs}" class="job-item">
+                <a th:each="job : ${jobs}" class="job-item" th:href="@{/candidate/jobs/details(id=${job.id})}">
                     <img th:src="@{/images/enterprise_icon.png}" alt="Nhà tuyển dụng">
                     <div>
                         <p th:text="${job.appliedPosition}" style="font-weight: bold;"></p>
                         <p th:text="${job.enterprise.name}"></p>
                     </div>
-                </div>
+                </a>
                 <div th:if="${#lists.size(jobs) % 2 == 1}" class="fix-align">
                     <p></p>
                     <p></p>

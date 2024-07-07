@@ -336,12 +336,28 @@
                 <input type="number" id="quantity" name="quantity" th:field="*{numberCandidates}" required>
             </div>
             <div class="input-group">
+                <label>Kinh nghiệm:</label>
+                <input type="text" th:field="*{workExperience}" required>
+            </div>
+            <div class="input-group">
+                <label>Mức lương:</label>
+                <input type="text" th:field="*{salary}" required>
+            </div>
+            <div class="input-group">
+                <label>Địa điểm làm việc:</label>
+                <input type="text" th:field="*{workLocation}" required>
+            </div>
+            <div class="input-group">
                 <label for="description">Mô tả công việc:</label>
                 <textarea id="description" name="description" th:field="*{jobDescription}" required></textarea>
             </div>
             <div class="input-group">
                 <label for="requirements">Yêu cầu ứng viên:</label>
                 <textarea id="requirements" name="requirements" th:field="*{requirements}" required></textarea>
+            </div>
+            <div class="input-group">
+                <label>Quyền lợi:</label>
+                <textarea th:field="*{benefits}" required></textarea>
             </div>
             <div class="input-group">
                 <label for="startDate">Ngày bắt đầu:</label>

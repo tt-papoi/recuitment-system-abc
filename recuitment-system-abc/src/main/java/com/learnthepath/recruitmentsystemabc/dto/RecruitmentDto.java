@@ -33,7 +33,20 @@ public class RecruitmentDto {
 
     private String status;
 
+    @NotNull(message = "Number of candidates cannot be blank")
     private String disapprovalReason;
+
+    @NotNull(message = "Work experience cannot be blank")
+    private String workExperience;
+
+    @NotNull(message = "Benefits cannot be blank")
+    private String benefits;
+
+    @NotNull(message = "Salary cannot be blank")
+    private String salary;
+
+    @NotNull(message = "Work location cannot be blank")
+    private String workLocation;
 
     @NotNull(message = "Start date position cannot be blank")
     @Future(message = "Date must be in the future")
