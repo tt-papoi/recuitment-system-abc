@@ -1,6 +1,5 @@
 package com.learnthepath.recruitmentsystemabc.dto;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

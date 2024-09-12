@@ -33,4 +33,8 @@ public interface RecruitmentService {
     Page<RecruitmentDto> searchJobs(String keyword, Pageable pageable);
 
     boolean hasAppliedForJob(Integer recruitmentId);
+
+    Page<RecruitmentDto> findAllAppliedJobs(Pageable pageable);
+
+    Page<RecruitmentDto> searchAppliedJobs(String keyword, Pageable pageable);
 }

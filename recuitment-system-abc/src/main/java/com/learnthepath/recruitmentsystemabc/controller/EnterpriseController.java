@@ -3,9 +3,11 @@ package com.learnthepath.recruitmentsystemabc.controller;
 import com.learnthepath.recruitmentsystemabc.dto.EnterpriseDto;
 import com.learnthepath.recruitmentsystemabc.dto.InvoiceDto;
 import com.learnthepath.recruitmentsystemabc.dto.RecruitmentDto;
+import com.learnthepath.recruitmentsystemabc.dto.ResumeDto;
 import com.learnthepath.recruitmentsystemabc.service.EnterpriseService;
 import com.learnthepath.recruitmentsystemabc.service.InvoiceService;
 import com.learnthepath.recruitmentsystemabc.service.RecruitmentService;
+import com.learnthepath.recruitmentsystemabc.service.ResumeService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,21 +25,47 @@ public class EnterpriseController {
     private EnterpriseService enterpriseService;
 
     @Autowired
-    RecruitmentService recruitmentService;
+    private RecruitmentService recruitmentService;
 
     @Autowired
     private InvoiceService invoiceService;
 
-    @GetMapping("/enterprise/home")
-    public String showEnterpriseHomePage(Model model) {
-        model.addAttribute("enterprise", enterpriseService.getCurrentEnterprise());
+    @Autowired
+    private ResumeService resumeService;
+
+    @GetMapping({"/enterprise/recruitment/posted", "/enterprise/home"})
+    public String showPostedJobsPage(Model model) {
+        EnterpriseDto enterpriseDto = enterpriseService.getCurrentEnterprise();
+        model.addAttribute("enterprise", enterpriseDto);
+        List<RecruitmentDto> recruitmentDtos = recruitmentService
+                .findRecruitmentByEnterpriseIdAndStatus(enterpriseDto.getId(), "POSTED");
+        recruitmentDtos.addAll(recruitmentService
+                .findRecruitmentByEnterpriseIdAndStatus(enterpriseDto.getId(), "POSTING"));
+        model.addAttribute("recruitments", recruitmentDtos);
         return "enterprise-page/enterprise-recruitment-posted";
     }
 
-    @GetMapping("/enterprise/recruitment/posted")
-    public String showPostedJobsPage(Model model) {
+    @GetMapping("/enterprise/recruitment/posted/details")
+    public String showPostedJobsDetails(@RequestParam(value = "recruitmentId") Integer recruitmentId,
+                                        @RequestParam(value = "resumesStatus", required = false) String resumesStatus,
+                                        Model model) {
+        RecruitmentDto recruitmentDto = recruitmentService.findById(recruitmentId);
+        if (!recruitmentDto.getStatus().equals("POSTED") && !recruitmentDto.getStatus().equals("POSTING")) {
+            return "error/404";
+        }
+        List<ResumeDto> resumes;
+        if(resumesStatus == null) {
+            resumes = resumeService.findByRecruitmentId(recruitmentId);
+        }
+        else {
+            resumes = resumeService.findByRecruitmentIdAndStatus(recruitmentId, resumesStatus);
+        }
+
         model.addAttribute("enterprise", enterpriseService.getCurrentEnterprise());
-        return "enterprise-page/enterprise-recruitment-posted";
+        model.addAttribute("recruitment", recruitmentDto);
+        model.addAttribute("resumes", resumes);
+        model.addAttribute("resumesStatus", resumesStatus);
+        return "enterprise-page/enterprise-recruitment-posted-details";
     }
 
     @GetMapping("/enterprise/recruitment/disapproval")
@@ -52,7 +80,7 @@ public class EnterpriseController {
     }
 
     @GetMapping("/enterprise/recruitment/disapproval/details")
-    String showDisapprovalRecruitmentDetails(@RequestParam(value = "id") Integer recruitmentId, Model model) {
+    public String showDisapprovalRecruitmentDetails(@RequestParam(value = "id") Integer recruitmentId, Model model) {
         model.addAttribute("enterprise", enterpriseService.getCurrentEnterprise());
         RecruitmentDto recruitmentDto = recruitmentService.findById(recruitmentId);
         if (!recruitmentDto.getStatus().equals("DISAPPROVAL")) {
@@ -74,7 +102,7 @@ public class EnterpriseController {
     }
 
     @GetMapping("/enterprise/recruitment/pending-approval/details")
-    String showPendingApprovalRecruitmentDetails(@RequestParam(value = "id") Integer recruitmentId, Model model) {
+    public String showPendingApprovalRecruitmentDetails(@RequestParam(value = "id") Integer recruitmentId, Model model) {
         model.addAttribute("enterprise", enterpriseService.getCurrentEnterprise());
         RecruitmentDto recruitmentDto = recruitmentService.findById(recruitmentId);
         if (!recruitmentDto.getStatus().equals("PENDING_APPROVAL")) {
@@ -105,7 +133,7 @@ public class EnterpriseController {
     }
 
     @PostMapping("/enterprise/recruitment/create/submit")
-    String handleCreateRecruitment(@Valid RecruitmentDto recruitmentDto, BindingResult result, Model model) {
+    public String handleCreateRecruitment(@Valid RecruitmentDto recruitmentDto, BindingResult result, Model model) {
 //        if (result.hasErrors()) {
 //            model.addAttribute("title", "Chỉnh sửa");
 //            model.addAttribute("enterprise", enterpriseService.getCurrentEnterprise());
@@ -136,7 +164,7 @@ public class EnterpriseController {
     }
 
     @GetMapping("/enterprise/recruitment/pending-paid/details")
-    String showPaymentDetails(@RequestParam(value = "id") Integer invoiceId, Model model) {
+    public String showPaymentDetails(@RequestParam(value = "id") Integer invoiceId, Model model) {
         model.addAttribute("enterprise", enterpriseService.getCurrentEnterprise());
         InvoiceDto invoiceDto = invoiceService.findById(invoiceId);
         if (!invoiceDto.getStatus().equals("UNPAID")) {
@@ -147,7 +175,7 @@ public class EnterpriseController {
     }
 
     @GetMapping("/enterprise/invoice")
-    String showInvoicePage(Model model) {
+    public String showInvoicePage(Model model) {
         model.addAttribute("enterprise", enterpriseService.getCurrentEnterprise());
         Integer enterpriseId = enterpriseService.getCurrentEnterprise().getId();
         String status = "PAID";
@@ -157,7 +185,7 @@ public class EnterpriseController {
     }
 
     @GetMapping("/enterprise/invoice/details")
-    String showInvoiceDetails(@RequestParam(value = "id") Integer invoiceId, Model model) {
+    public String showInvoiceDetails(@RequestParam(value = "id") Integer invoiceId, Model model) {
         model.addAttribute("enterprise", enterpriseService.getCurrentEnterprise());
         InvoiceDto invoiceDto = invoiceService.findById(invoiceId);
         if (!invoiceDto.getStatus().equals("PAID")) {

@@ -316,16 +316,19 @@
                 <th>Ngày bắt đầu</th>
                 <th>Ngày kết thúc</th>
                 <th>Số lượng ứng viên</th>
+                <th>Trạng thái</th>
                 <th></th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="recruitment, index : ${pendingApprovalRecruitment}">
+            <tr th:each="recruitment, index : ${recruitments}">
                 <td th:text="${recruitment.appliedPosition}"></td>
                 <td th:text="${#temporals.format(recruitment.startDate, 'dd-MM-yyyy')}"></td>
                 <td th:text="${#temporals.format(recruitment.endDate, 'dd-MM-yyyy')}"></td>
                 <td th:text="${recruitment.numberCandidates}"></td>
-                <td><a th:href="@{#(id=${recruitment.id})}">Chi tiết</a></td>
+                <td th:if="${recruitment.status} == 'POSTING'" th:text="'Đang mở'"></td>
+                <td th:if="${recruitment.status} == 'POSTED'" th:text="'Đã đóng'"></td>
+                <td><a th:href="@{/enterprise/recruitment/posted/details(recruitmentId=${recruitment.id})}">Chi tiết</a></td>
             </tr>
             </tbody>
         </table>

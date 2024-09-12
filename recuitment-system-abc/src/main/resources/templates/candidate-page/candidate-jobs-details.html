@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enterprise Portal - Tuyển dụng ABC</title>
+    <title>Candidate Portal - Tuyển dụng ABC</title>
     <style>
         /* Global Styles */
         * {
@@ -540,6 +540,10 @@
         </div>
         <div class="job-details">
             <h3>Chi tiết tin tuyển dụng</h3>
+            <div class="details">
+                <p>Công ty</p>
+                <p th:text="*{enterprise.name}"></p>
+            </div>
             <div class="details">
                 <p>Mô tả công việc</p>
                 <p th:text="*{jobDescription}">Mô tả công việc</p>

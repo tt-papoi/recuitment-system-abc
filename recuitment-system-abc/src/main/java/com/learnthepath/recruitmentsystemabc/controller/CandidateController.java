@@ -25,19 +25,8 @@ public class CandidateController {
     @Autowired
     private ResumeService resumeService;
 
-//    @GetMapping("/candidate/jobs")
-//    public String showJobsPage(@RequestParam(defaultValue = "0") int page, Model model) {
-//        int pageSize = 4; // Số lượng công việc mỗi trang
-//        PageRequest pageRequest = PageRequest.of(page, pageSize);
-//        Page<RecruitmentDto> jobPage = recruitmentService.findAll(pageRequest);
-//        model.addAttribute("jobs", jobPage.getContent());
-//        model.addAttribute("currentPage", page);
-//        model.addAttribute("totalPages", jobPage.getTotalPages());
-//        return "candidate-page/candidate-jobs";
-//    }
-
     @GetMapping({"/candidate/home", "/candidate/jobs", "/candidate/jobs/find"})
-    public String searchJobs(@RequestParam(value = "keyword", required = false) String keyword,
+    public String showJobs(@RequestParam(value = "keyword", required = false) String keyword,
                              @RequestParam(value = "page", defaultValue = "0") int page,
                              Model model) {
         Pageable pageable = PageRequest.of(page, Constants.JOBS_PER_PAGE);
@@ -74,5 +63,23 @@ public class CandidateController {
             model.addAttribute("message", "Failed to upload file.");
         }
         return "redirect:/candidate/jobs";
+    }
+
+    @GetMapping("/candidate/jobs/applied")
+    public String showAppliedJob(@RequestParam(value = "keyword", required = false) String keyword,
+                             @RequestParam(value = "page", defaultValue = "0") int page,
+                             Model model) {
+        Pageable pageable = PageRequest.of(page, Constants.JOBS_PER_PAGE);
+        Page<RecruitmentDto> jobs;
+        if (keyword != null && !keyword.isEmpty()) {
+            jobs = recruitmentService.searchAppliedJobs(keyword, pageable);
+        } else {
+            jobs = recruitmentService.findAllAppliedJobs(pageable);
+        }
+        model.addAttribute("jobs", jobs);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", jobs.getTotalPages());
+        return "candidate-page/candidate-applied-jobs";
     }
 }

@@ -24,4 +24,17 @@ public interface RecruitmentRepository extends JpaRepository<RecruitmentEntity, 
 
     @Query("SELECT r FROM RecruitmentEntity r WHERE r.appliedPosition LIKE %:keyword% OR r.jobDescription LIKE %:keyword%")
     Page<RecruitmentEntity> searchJobs(@Param("keyword") String keyword, Pageable pageable);
+
+    @Query("SELECT r " +
+            "FROM RecruitmentEntity r " +
+            "JOIN r.resumes res " +
+            "WHERE res.candidate.id = :candidateId")
+    Page<RecruitmentEntity> findAllAppliedJobs(Integer candidateId, Pageable pageable);
+
+    @Query("SELECT r " +
+            "FROM RecruitmentEntity r " +
+            "JOIN r.resumes res " +
+            "WHERE res.candidate.id = :candidateId " +
+            "AND r.appliedPosition LIKE %:keyword% OR r.jobDescription LIKE %:keyword%")
+    Page<RecruitmentEntity> searchAppliedJobs(Integer candidateId, String keyword, Pageable pageable);
 }

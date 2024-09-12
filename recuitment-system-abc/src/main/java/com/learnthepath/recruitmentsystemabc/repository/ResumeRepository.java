@@ -9,4 +9,8 @@ import java.util.List;
 @Repository
 public interface ResumeRepository extends JpaRepository<ResumeEntity, Integer> {
     List<ResumeEntity> findByRecruitmentIdAndCandidateId(Integer recruitmentId, Integer candidateId);
+
+    List<ResumeEntity> findByRecruitmentId(Integer recruitmentId);
+
+    List<ResumeEntity> findByRecruitmentIdAndStatus(Integer recruitmentId, String status);
 }

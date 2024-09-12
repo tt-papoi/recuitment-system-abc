@@ -80,6 +80,30 @@ public class RecruitmentServiceImpl implements RecruitmentService {
     }
 
     @Override
+    public Page<RecruitmentDto> findAllAppliedJobs(Pageable pageable) {
+        Integer candidateId = userService.getCurrentUserId();
+        Page<RecruitmentEntity> pageEntities = recruitmentRepository.findAllAppliedJobs(candidateId, pageable);
+
+        List<RecruitmentDto> dtos = pageEntities.getContent().stream()
+                .map(Utils::mapToDto)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(dtos, pageable, pageEntities.getTotalElements());
+    }
+
+    @Override
+    public Page<RecruitmentDto> searchAppliedJobs(String keyword, Pageable pageable) {
+        Integer candidateId = userService.getCurrentUserId();
+        Page<RecruitmentEntity> entities = recruitmentRepository.searchAppliedJobs(candidateId, keyword, pageable);
+
+        List<RecruitmentDto> dtos = entities.stream()
+                .map(Utils::mapToDto)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(dtos, pageable, entities.getTotalElements());
+    }
+
+    @Override
     public void updateStatusById(Integer id, String status) {
         RecruitmentEntity recruitment = recruitmentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Cannot find recruitment with id: " + id));
